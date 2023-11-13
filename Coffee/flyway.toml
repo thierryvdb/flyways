@@ -1,0 +1,24 @@
+databaseType = "MySql"
+name = "Coffee"
+id = "3f2fbad1-d01e-44ae-a5ed-122539902868"
+
+[flywayDesktop]
+developmentEnvironment = "development"
+shadowEnvironment = "shadow"
+schemaModel = "./schema-model"
+
+[redgateCompare]
+filterFile = "filter.rgf"
+
+[redgateCompare.mysql.options.ignores]
+ignoreNewlinesInTextObjects = "off"
+
+[flyway]
+mixed = true
+outOfOrder = true
+locations = [ "filesystem:migrations" ]
+validateMigrationNaming = true
+
+[environments.Coffee]
+url = "jdbc:mysql://192.168.0.52:3306"
+schemas = [ "coffeeshop" ]
