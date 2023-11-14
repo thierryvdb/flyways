@@ -62,5 +62,5 @@ jobs:
         env:
           FLYWAY_VALIDATE_MIGRATION_NAMING: true
 
-      - name: Run additional tests
-        run: echo 'testing'
+      - name: Migrate
+        run: flyway migrate
