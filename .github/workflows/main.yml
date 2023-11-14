@@ -64,4 +64,4 @@ jobs:
           password: r0y4lcoffee
 
       - name: Run additional tests
-        run: echo 'testing'
+        run: echo 'testing1'
