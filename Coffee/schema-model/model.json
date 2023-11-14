@@ -1,8 +1,8 @@
 {
   "database-engine": "mysql",
   "database-properties": {
-    "database-version": "8.0.29",
-    "database-flavor": "mysql",
+    "database-version": "10.6.16",
+    "database-flavor": "mariadb",
     "model-version": "1.1"
   },
   "model-format": "rgmf"
