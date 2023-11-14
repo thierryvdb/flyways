@@ -37,6 +37,7 @@ jobs:
           sqlfluff_command: "lint" # Or "lint"
           config: "${{ github.workspace }}/.sqlfluff"
           paths: '${{ github.workspace }}/models'
+          github_base_ref: "main"
       - name: Show outputs (Optional)
         run: |
           echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
