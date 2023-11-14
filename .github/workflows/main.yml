@@ -15,10 +15,10 @@ jobs:
       - name: Sql Lint Check
         uses: Bidaya0/sql-lint-in-action@v0.0.2
         with:
-          path: ${{ github.workspace }}/Coffee/migrations
+          path: ${{ github.workspace }}/Coffee/migrations/*.sql
           host: 192.168.60.65
-          user: coffeemng
-          password: r0y4lcoffee
+          user: ${{ secrets.USER }}
+          password: ${{ secrets.DB_PASSWORD }}
           driver: mysql
           port: 3306
           ignore_errors:
@@ -56,11 +56,13 @@ jobs:
       - name: Migrate Step
         uses: joshuaavalon/flyway-action@v3.0.0
         with:
-          url: jdbc:mysql://192.168.60.65:3306/coffeeshop
-          user: coffeemng
-          password: r0y4lcoffee
+          url: jdbc:mysql://192.168.60.65:3306/${{ secrets.DB }}
+          user: ${{ secrets.USER }}
+          password: ${{ secrets.DB_PASSWORD }}
         env:
           FLYWAY_VALIDATE_MIGRATION_NAMING: true
 
       - name: Migrate
-        run: /home/thierry/Downloads/flyway/flyway migrate
+        run: /home/thierry/Downloads/flyway/flyway migrate -configFiles="/home/thierry/Documents/flyways/Coffee/flyway.toml,/home/thierry/Documents/flyways/Coffee/flyway.user.toml" -workingDirectory="/home/thierry/Documents/flyways/Coffee" -reportEnabled=false -environment=development -url="jdbc:mysql://192.168.60.65:3306" -user=${{ secrets.USER }} -password=${{ secrets.DB_PASSWORD }} -schemas=${{ secrets.DB }}
+
+        
