@@ -9,11 +9,11 @@ jobs:
       - uses: Bidaya0/sql-lint-in-action@v0.0.2
         with:
           path: ../Coffee/migrations
-          host: 
-          user:
-          password:
-          driver: 
-          port: 
+          host: 192.168.60.65
+          user: coffeemng
+          password: r0y4lcoffee
+          driver: mysql
+          port: 3306
           ignore_errors:
       - uses: joshuaavalon/flyway-action@v3.0.0
         with:
