@@ -1,0 +1,36 @@
+table "coffeeshop"."astronauts" {
+  columns = (
+    column "id" {
+      type = int(11)
+      null = NOT NULL
+    }
+    column "first_name" {
+      type = varchar(50)
+      null = NOT NULL
+    }
+    column "last_name" {
+      type = varchar(50)
+      null = NOT NULL
+    }
+    column "birth_date" {
+      type = date
+    }
+    column "nationality" {
+      type = varchar(50)
+    }
+    column "spaceflights" {
+      type = int(11)
+    }
+    column "mission_specialty" {
+      type = varchar(100)
+    }
+  )
+  primaryKey = {
+    columns = [
+      id
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+
