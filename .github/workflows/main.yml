@@ -64,6 +64,6 @@ jobs:
           FLYWAY_VALIDATE_MIGRATION_NAMING: true
 
       - name: Migrate
-        run: /home/thierry/Downloads/flyway/flyway migrate -configFiles="/home/thierry/Documents/flyways/Coffee/flyway.toml,/home/thierry/Documents/flyways/Coffee/flyway.user.toml" -workingDirectory="/home/thierry/Documents/flyways/Coffee" -reportEnabled=false -environment=development -url="jdbc:mysql://192.168.60.65:3306" -user=${{ secrets.USER }} -password=${{ secrets.DB_PASSWORD }} -schemas=${{ secrets.DB }}
+        run: ${{secrets.FLYWAY}}  migrate -configFiles="/home/thierry/Documents/flyways/Coffee/flyway.toml,/home/thierry/Documents/flyways/Coffee/flyway.user.toml" -workingDirectory="/home/thierry/Documents/flyways/Coffee" -reportEnabled=false -environment=development -url="jdbc:mysql://192.168.60.65:3306" -user=${{ secrets.USER }} -password=${{ secrets.DB_PASSWORD }} -schemas=${{ secrets.DB }}
 
         
