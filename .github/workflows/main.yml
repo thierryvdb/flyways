@@ -59,6 +59,8 @@ jobs:
           url: jdbc:mysql://192.168.60.65:3306/coffeeshop
           user: coffeemng
           password: r0y4lcoffee
+        env:
+          FLYWAY_VALIDATE_MIGRATION_NAMING: true
 
       - name: Run additional tests
         run: echo 'testing'
