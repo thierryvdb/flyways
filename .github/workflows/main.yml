@@ -63,4 +63,4 @@ jobs:
           FLYWAY_VALIDATE_MIGRATION_NAMING: true
 
       - name: Migrate
-        run: flyway migrate
+        run: /home/thierry/Downloads/flyway/flyway migrate
