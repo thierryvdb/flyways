@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Test Code Step
+      - name: Sql Lint Check
         uses: Bidaya0/sql-lint-in-action@v0.0.2
         with:
           path: ${{ github.workspace }}/Coffee/migrations
@@ -22,6 +22,24 @@ jobs:
           driver: mysql
           port: 3306
           ignore_errors:
+
+  sqlfluff:
+    runs-on: self-hosted
+    steps:
+      - name: Check with SqlFluff
+        uses: yu-iskw/action-sqlfluff@v3
+        id: lint-sql
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          sqlfluff_version: "2.0.7"
+          sqlfluff_command: "lint" # Or "lint"
+          config: "${{ github.workspace }}/.sqlfluff"
+          paths: '${{ github.workspace }}/models'
+      - name: Show outputs (Optional)
+        run: |
+          echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
+          echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}' | jq -r '.'
 
   migrate:
     runs-on: self-hosted
