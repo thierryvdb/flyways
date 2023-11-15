@@ -1,0 +1,22 @@
+table "coffeeshop"."AnotherRandomTable" {
+  columns = (
+    column "ID" {
+      type = int(11)
+      null = NOT NULL
+    }
+    column "Description" {
+      type = varchar(100)
+    }
+    column "RandomFloatValue" {
+      type = float
+    }
+  )
+  primaryKey = {
+    columns = [
+      ID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+
