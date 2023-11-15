@@ -22,6 +22,8 @@ outOfOrder = true
 locations = [ "filesystem:migrations" ]
 validateMigrationNaming = true
 
-[environments.Coffee]
-url = "jdbc:mysql://192.168.0.52:3306"
-schemas = [ "coffeeshop" ]
+[environments.shadow]
+url = "jdbc:mysql://192.168.0.116:3306"
+schemas = [ "batman" ]
+displayName = "Shadow database"
+provisioner = "clean"
