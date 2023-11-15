@@ -1,0 +1,30 @@
+table "coffeeshop"."teacher" {
+  columns = (
+    column "id" {
+      type = int(11)
+      null = NOT NULL
+    }
+    column "first_name" {
+      type = varchar(50)
+      null = NOT NULL
+    }
+    column "last_name" {
+      type = varchar(50)
+      null = NOT NULL
+    }
+    column "subject" {
+      type = varchar(100)
+    }
+    column "hire_date" {
+      type = date
+    }
+  )
+  primaryKey = {
+    columns = [
+      id
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+
