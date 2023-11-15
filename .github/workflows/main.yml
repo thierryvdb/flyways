@@ -17,7 +17,7 @@ jobs:
         with:
           path: ${{ github.workspace }}/Coffee/migrations/*.sql
           #path:  '**/*.{sql}'
-          host: 192.168.60.65
+          host: 192.168.0.54
           user: ${{ secrets.USER }}
           password: ${{ secrets.DB_PASSWORD }}
           driver: mysql
@@ -57,7 +57,7 @@ jobs:
       - name: Migrate Step
         uses: joshuaavalon/flyway-action@v3.0.0
         with:
-          url: jdbc:mysql://192.168.60.65:3306/${{ secrets.DB }}
+          url: jdbc:mysql://192.168.0.54:3306/${{ secrets.DB }}
           user: ${{ secrets.USER }}
           password: ${{ secrets.DB_PASSWORD }}
         env:
