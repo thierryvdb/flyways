@@ -1,0 +1,28 @@
+table "coffeeshop"."Doctors" {
+  columns = (
+    column "DoctorID" {
+      type = int(11)
+      null = NOT NULL
+    }
+    column "FirstName" {
+      type = varchar(50)
+    }
+    column "LastName" {
+      type = varchar(50)
+    }
+    column "Specialization" {
+      type = varchar(50)
+    }
+    column "PhoneNumber" {
+      type = varchar(20)
+    }
+  )
+  primaryKey = {
+    columns = [
+      DoctorID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+

@@ -1,0 +1,34 @@
+table "coffeeshop"."Patients" {
+  columns = (
+    column "PatientID" {
+      type = int(11)
+      null = NOT NULL
+    }
+    column "FirstName" {
+      type = varchar(50)
+    }
+    column "LastName" {
+      type = varchar(50)
+    }
+    column "Gender" {
+      type = enum('Male','Female','Other')
+    }
+    column "DateOfBirth" {
+      type = date
+    }
+    column "Address" {
+      type = varchar(100)
+    }
+    column "PhoneNumber" {
+      type = varchar(20)
+    }
+  )
+  primaryKey = {
+    columns = [
+      PatientID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+

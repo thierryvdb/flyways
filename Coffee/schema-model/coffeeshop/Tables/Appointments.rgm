@@ -1,0 +1,75 @@
+table "coffeeshop"."Appointments" {
+  columns = (
+    column "AppointmentID" {
+      type = int(11)
+      null = NOT NULL
+    }
+    column "PatientID" {
+      type = int(11)
+    }
+    column "DoctorID" {
+      type = int(11)
+    }
+    column "AppointmentDate" {
+      type = datetime
+    }
+    column "Diagnosis" {
+      type = varchar(100)
+    }
+    column "Prescription" {
+      type = text
+    }
+  )
+  primaryKey = {
+    columns = [
+      AppointmentID
+    ]
+    name = "PRIMARY"
+    objectType = primaryKey
+  }
+}
+
+foreignKey "coffeeshop"."Appointments"."Appointments_ibfk_1" {
+  columns = [
+    "PatientID"
+  ]
+  referencedTable = "coffeeshop"."Patients"
+  referencedColumns = [
+    "PatientID"
+  ]
+  onUpdate = RESTRICT
+  onDelete = RESTRICT
+}
+
+foreignKey "coffeeshop"."Appointments"."Appointments_ibfk_2" {
+  columns = [
+    "DoctorID"
+  ]
+  referencedTable = "coffeeshop"."Doctors"
+  referencedColumns = [
+    "DoctorID"
+  ]
+  onUpdate = RESTRICT
+  onDelete = RESTRICT
+}
+
+index "coffeeshop"."Appointments"."DoctorID" {
+  columns = <
+    {
+      name = DoctorID
+    }
+
+  >
+  type = BTREE
+}
+
+index "coffeeshop"."Appointments"."PatientID" {
+  columns = <
+    {
+      name = PatientID
+    }
+
+  >
+  type = BTREE
+}
+
