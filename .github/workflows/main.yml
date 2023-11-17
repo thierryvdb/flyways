@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  sqlfluff:
+  sqlfluff-lint:
     runs-on: self-hosted
     steps:
       - name: Checkout code
@@ -24,13 +24,16 @@ jobs:
           paths: ${{ github.workspace }}/Coffee/migrations/*.sql
           github_base_ref: "main"
 
-      - name: Save SQLFluff Report
+      - name: Upload SQLFluff Lint Error Report
         if: failure()
-        run: echo "${{ steps.lint-sql.outputs.sqlfluff-results }}" > sqlfluff_OutPut_report.xml
+        uses: actions/upload-artifact@v2
+        with:
+          name: sqlfluff-lint-error-report
+          path: fixed_sqlfluff_lint_error_report.xml
 
-  fix:
+  sqlfluff-fix:
     runs-on: self-hosted
-    needs: sqlfluff
+    needs: sqlfluff-lint
     if: failure()
 
     steps:
@@ -47,13 +50,17 @@ jobs:
           paths: ${{ github.workspace }}/Coffee/migrations/*.sql
           github_base_ref: "main"
 
-      - name: Save Fixed SQLFluff Report
-        run: echo "${{ steps.lint-sql.outputs.sqlfluff-results }}" > fixed_sqlfluff_OutPut_report.xml
+      - name: Upload SQLFluff Fix Error Report
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: sqlfluff-fix-error-report
+          path: fixed_sqlfluff_fix_error_report.xml
 
   migrate:
     runs-on: self-hosted
     needs:
-      - fix
+      - sqlfluff-fix
 
     steps:
       - name: Checkout code
@@ -68,9 +75,9 @@ jobs:
         env:
           FLYWAY_VALIDATE_MIGRATION_NAMING: true
 
-      - name: Upload SQLFluff Report
+      - name: Upload Flyway Report
         if: failure()
         uses: actions/upload-artifact@v2
         with:
-          name: sqlfluff-report
-          path: fixed_sqlfluff_OutPut_report.xml
+          name: flyway-report
+          path: flyway_report.xml
