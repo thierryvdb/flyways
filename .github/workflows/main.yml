@@ -12,14 +12,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Reviewdog
-        run: |
-         curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s
-
       - name: Check with SqlFluff and Reviewdog
         id: lint-sql
         run: |
-         /home/thierry/.local/bin/sqlfluff lint --format=unix ${{ github.workspace }}/Coffee/migrations/*.sql | /home/thierry/action-setup/bin/reviewdog -reporter=github-pr-review -level=info
+         /home/thierry/.local/bin/sqlfluff lint --format=human ${{ github.workspace }}/Coffee/migrations/*.sql | /home/thierry/action-setup/bin/reviewdog -reporter=github-pr-review -level=info
 
       - name: Save SQLFluff Report
         if: failure()
