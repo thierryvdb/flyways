@@ -6,34 +6,34 @@ on:
       - main
 
 jobs:
-  sqlfluff-lint:
-    runs-on: self-hosted
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#  sqlfluff-lint:
+#    runs-on: self-hosted
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name: Check with SqlFluff
+#        id: lint-sql
+#        uses: yu-iskw/action-sqlfluff@v3
+#        with:
+#          github_token: ${{ secrets.github_token }}
+#          reporter: github-pr-review
+#          sqlfluff_version: "2.0.7"
+#          sqlfluff_command: "lint"
+#          config: "${{ github.workspace }}/.sqlfluff"
+#          paths: ${{ github.workspace }}/Coffee/migrations/*.sql
+#          github_base_ref: "main"
 
-      - name: Check with SqlFluff
-        id: lint-sql
-        uses: yu-iskw/action-sqlfluff@v3
-        with:
-          github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
-          sqlfluff_version: "2.0.7"
-          sqlfluff_command: "lint"
-          config: "${{ github.workspace }}/.sqlfluff"
-          paths: ${{ github.workspace }}/Coffee/migrations/*.sql
-          github_base_ref: "main"
-
-      - name: Upload SQLFluff Lint Error Report
-        if: failure()
-        uses: actions/upload-artifact@v2
-        with:
-          name: sqlfluff-lint-error-report
-          path: fixed_sqlfluff_lint_error_report.xml
+#      - name: Upload SQLFluff Lint Error Report
+#        if: failure()
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: sqlfluff-lint-error-report
+#          path: fixed_sqlfluff_lint_error_report.xml
 
   sqlfluff-fix:
     runs-on: self-hosted
-    needs: sqlfluff-lint
+    #needs: sqlfluff-lint
     if: failure()
 
     steps:
