@@ -6,20 +6,32 @@ on:
       - main
 
 jobs:
-  info:
+  persist:
     runs-on: self-hosted
     steps:
       - name: Clean Cache
         uses: actions/cache@v2
         with:
           path: |
-            ${{ github.workspace }}/Coffee  # Adjust the path based on your project structure
+            ${{ github.workspace }}/Coffee 
           key: ${{ runner.os }}-${{ hashFiles('**/*.sql') }}
           restore-keys: |
             ${{ runner.os }}
+      
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          path: preseeded-code
 
+      - name: Persist code to workspace
+        uses: actions/upload-artifact@v2
+        with:
+          name: preseeded-code
+          path: preseeded-code
+
+  info:
+    runs-on: self-hosted
+    steps:      
       - name: Runner Execution Directory
         run: |
           echo ${{ github.workspace }}
@@ -27,8 +39,6 @@ jobs:
       - name: List SQL files
         run: |
           find ${{ github.workspace }} -name "*.sql" 
-
-
 
   sqlfluff-lint:
     runs-on: self-hosted
