@@ -49,9 +49,6 @@ jobs:
     runs-on: self-hosted
     needs: sqlfluff-lint
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Fix with SqlFluff
         uses: yu-iskw/action-sqlfluff@v3
         with:
@@ -75,9 +72,6 @@ jobs:
       - sqlfluff-fix
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Migrate Step
         uses: joshuaavalon/flyway-action@v3.0.0
         with:
