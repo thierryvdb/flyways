@@ -63,7 +63,7 @@ jobs:
           FLYWAY_VALIDATE_MIGRATION_NAMING: true
 
       - name: Migrate
-        run: ${{secrets.FLYWAY}}  migrate -configFiles="/home/thierry/Documents/flyways/Coffee/flyway.toml,/home/thierry/Documents/flyways/Coffee/flyway.user.toml" -workingDirectory="/home/thierry/Documents/flyways/Coffee" -reportEnabled=false -environment=development -url="jdbc:mysql://192.168.60.65:3306" -user=${{ secrets.USER }} -password=${{ secrets.DB_PASSWORD }} -schemas=${{ secrets.DB }}
+        run: ${{secrets.FLYWAY}}  migrate -configFiles="/home/thierry/Documents/flyways/Coffee/flyway.toml,/home/thierry/Documents/flyways/Coffee/flyway.user.toml" -workingDirectory="/home/thierry/Documents/flyways/Coffee" -reportEnabled=false -environment=development -url="jdbc:mysql://192.168.0.54:3306" -user=${{ secrets.USER }} -password=${{ secrets.DB_PASSWORD }} -schemas=${{ secrets.DB }}
 
       - name: Upload SQLFluff Report
         if: failure()
