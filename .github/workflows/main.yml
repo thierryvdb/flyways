@@ -16,6 +16,10 @@ jobs:
         run: |
           find ${{ github.workspace }} -name "*.sql"  
 
+      - name: Where am I => PWD
+        run: |
+          ${{ github.workspace }}
+
       - name: Check with SqlFluff
         id: lint-sql
         uses: yu-iskw/action-sqlfluff@v3
