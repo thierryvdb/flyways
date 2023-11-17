@@ -19,7 +19,7 @@ jobs:
 
       - name: Save SQLFluff Report
         if: failure()
-        run: echo "${{ steps.lint-sql.outputs.sqlfluff-results }}" > sqlfluff_OutPut_report.xml
+        run: echo "${{ steps.lint-sql.outputs.sqlfluff-results }}" > sqlfluff_OutPut_report.html
 
   migrate:
     runs-on: self-hosted
@@ -44,4 +44,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: sqlfluff-report
-          path: sqlfluff_OutPut_report.xml
+          path: sqlfluff_OutPut_report.html
