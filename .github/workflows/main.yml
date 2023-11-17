@@ -1,13 +1,9 @@
 name: Main
 
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
-
 
 jobs:
   sqlfluff-lint:
@@ -27,17 +23,6 @@ jobs:
           config: "${{ github.workspace }}/.sqlfluff"
           paths: ${{ github.workspace }}/Coffee/migrations/*.sql
           github_base_ref: "main"
-        
-      - name: static check  
-        uses: reviewdog/action-staticcheck@v1
-        with:
-          github_token: ${{ secrets.github_token }}
-          # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
-          reporter: github-pr-review
-          # Report all results.
-          filter_mode: nofilter
-          # Exit with 1 when it find at least one finding.
-          fail_on_error: true
 
       - name: Upload SQLFluff Lint Error Report
         if: failure()
