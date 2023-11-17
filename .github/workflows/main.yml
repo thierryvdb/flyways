@@ -37,7 +37,8 @@ jobs:
           sqlfluff_version: "2.0.7"
           sqlfluff_command: "lint" # "fix " Or "lint"
           config: "${{ github.workspace }}/.sqlfluff"
-          paths: '${{ github.workspace }}/models'
+          #paths: '${{ github.workspace }}/models'
+          paths: ${{ github.workspace }}/Coffee/migrations/*.sql
           github_base_ref: "main"
       - name: Save SQLFluff Report
         if: failure()
