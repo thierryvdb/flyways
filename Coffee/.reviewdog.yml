@@ -1,0 +1,6 @@
+runner:
+  tool:
+    # Choose the tool you are using (e.g., sqlfluff)
+    - name: "sqlfluff"
+      # Specify the command to run sqlfluff with the desired options
+      cmd: "sqlfluff lint --format=human"
