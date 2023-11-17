@@ -11,6 +11,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Check with SqlFluff
         id: lint-sql
         uses: yu-iskw/action-sqlfluff@v3
@@ -22,17 +23,37 @@ jobs:
           config: "${{ github.workspace }}/.sqlfluff"
           paths: ${{ github.workspace }}/Coffee/migrations/*.sql
           github_base_ref: "main"
-      - name: Upload SQLFluff Lint Report
+
+      - name: Save SQLFluff Report
         if: failure()
-        uses: actions/upload-artifact@v2
+        run: echo "${{ steps.lint-sql.outputs.sqlfluff-results }}" > sqlfluff_OutPut_report.xml
+
+  fix:
+    runs-on: self-hosted
+    needs: sqlfluff
+    if: failure()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Fix with SqlFluff
+        uses: yu-iskw/action-sqlfluff@v3
         with:
-          name: sqlfluff-lint-report
-          path: sqlfluff_lint_report.xml
+          github_token: ${{ secrets.github_token }}
+          sqlfluff_version: "2.0.7"
+          sqlfluff_command: "fix"
+          config: "${{ github.workspace }}/.sqlfluff"
+          paths: ${{ github.workspace }}/Coffee/migrations/*.sql
+          github_base_ref: "main"
+
+      - name: Save Fixed SQLFluff Report
+        run: echo "${{ steps.lint-sql.outputs.sqlfluff-results }}" > fixed_sqlfluff_OutPut_report.xml
 
   migrate:
     runs-on: self-hosted
     needs:
-      - sqlfluff
+      - fix
 
     steps:
       - name: Checkout code
@@ -52,4 +73,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: sqlfluff-report
-          path: sqlfluff_report.xml
+          path: fixed_sqlfluff_OutPut_report.xml
