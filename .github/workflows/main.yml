@@ -12,6 +12,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: List SQL files
+        run: |
+          find ${{ github.workspace }} -name "*.sql"  
+
       - name: Check with SqlFluff
         id: lint-sql
         uses: yu-iskw/action-sqlfluff@v3
