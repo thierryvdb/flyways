@@ -1,9 +1,13 @@
 name: Main
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
+
 
 jobs:
   sqlfluff-lint:
