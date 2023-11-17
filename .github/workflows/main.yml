@@ -62,8 +62,8 @@ jobs:
         env:
           FLYWAY_VALIDATE_MIGRATION_NAMING: true
 
-      - name: Migrate
-        run: ${{secrets.FLYWAY}} migrate -configFiles=${{ github.workspace }}/Coffee/flyway.toml,${{ github.workspace }}/Coffee/flyway.user.toml -workingDirectory=${{ github.workspace }}/Coffee -reportEnabled=false -environment=development -url=jdbc:mysql://192.168.0.54:3306 -user=${{ secrets.USER }} -password=${{ secrets.DB_PASSWORD }} -schemas=${{ secrets.DB }}
+#      - name: Migrate
+#        run: ${{secrets.FLYWAY}} migrate -configFiles=${{ github.workspace }}/Coffee/flyway.toml,${{ github.workspace }}/Coffee/flyway.user.toml -workingDirectory=${{ github.workspace }}/Coffee -reportEnabled=false -environment=development -url=jdbc:mysql://192.168.0.54:3306 -user=${{ secrets.USER }} -password=${{ secrets.DB_PASSWORD }} -schemas=${{ secrets.DB }}
 
       - name: Upload SQLFluff Report
         if: failure()
