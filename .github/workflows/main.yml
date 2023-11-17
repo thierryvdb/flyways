@@ -6,25 +6,72 @@ on:
       - main
 
 jobs:
-  sqlfluff-reviewdog:
+  sqlfluff-lint:
     runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Check with SqlFluff and Reviewdog
+      - name: Check with SqlFluff
         id: lint-sql
-        run: |
-         /home/thierry/.local/bin/sqlfluff lint --format=human ${{ github.workspace }}/Coffee/migrations/*.sql | /home/thierry/action-setup/bin/reviewdog -reporter=github-pr-review -level=info
+        uses: yu-iskw/action-sqlfluff@v3
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          sqlfluff_version: "2.0.7"
+          sqlfluff_command: "lint"
+          config: "${{ github.workspace }}/.sqlfluff"
+          paths: ${{ github.workspace }}/Coffee/migrations/*.sql
+          github_base_ref: "main"
+        
+      - name: static check  
+        uses: reviewdog/action-staticcheck@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          # Change reviewdog reporter if you need [github-pr-check,github-check,github-pr-review].
+          reporter: github-pr-review
+          # Report all results.
+          filter_mode: nofilter
+          # Exit with 1 when it find at least one finding.
+          fail_on_error: true
 
-      - name: Save SQLFluff Report
+      - name: Upload SQLFluff Lint Error Report
         if: failure()
-        run: echo "${{ steps.lint-sql.outputs.sqlfluff-results }}" > sqlfluff_OutPut_report.html
+        uses: actions/upload-artifact@v2
+        with:
+          name: sqlfluff-lint-error-report
+          path: fixed_sqlfluff_lint_error_report.xml
+
+  sqlfluff-fix:
+    runs-on: self-hosted
+    needs: sqlfluff-lint
+    if: failure()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Fix with SqlFluff
+        uses: yu-iskw/action-sqlfluff@v3
+        with:
+          github_token: ${{ secrets.github_token }}
+          sqlfluff_version: "2.0.7"
+          sqlfluff_command: "fix"
+          config: "${{ github.workspace }}/.sqlfluff"
+          paths: ${{ github.workspace }}/Coffee/migrations/*.sql
+          github_base_ref: "main"
+
+      - name: Upload SQLFluff Fix Error Report
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: sqlfluff-fix-error-report
+          path: fixed_sqlfluff_fix_error_report.xml
 
   migrate:
     runs-on: self-hosted
     needs:
-      - sqlfluff-reviewdog
+      - sqlfluff-fix
 
     steps:
       - name: Checkout code
@@ -39,9 +86,9 @@ jobs:
         env:
           FLYWAY_VALIDATE_MIGRATION_NAMING: true
 
-      - name: Upload SQLFluff Report
+      - name: Upload Flyway Report
         if: failure()
         uses: actions/upload-artifact@v2
         with:
-          name: sqlfluff-report
-          path: sqlfluff_OutPut_report.html
+          name: flyway-report
+          path: flyway_report.xml
