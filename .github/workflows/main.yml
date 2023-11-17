@@ -53,7 +53,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # ... (your existing migration steps)
+      - name: Migrate Step
+        uses: joshuaavalon/flyway-action@v3.0.0
+        with:
+          url: jdbc:mysql://192.168.0.116:3306/${{ secrets.DB }}
+          user: ${{ secrets.USER }}
+          password: ${{ secrets.DB_PASSWORD }}
+        env:
+          FLYWAY_VALIDATE_MIGRATION_NAMING: true
+
+      - name: Migrate
+        run: ${{secrets.FLYWAY}}  migrate -configFiles="/home/thierry/Documents/flyways/Coffee/flyway.toml,/home/thierry/Documents/flyways/Coffee/flyway.user.toml" -workingDirectory="/home/thierry/Documents/flyways/Coffee" -reportEnabled=false -environment=development -url="jdbc:mysql://192.168.60.65:3306" -user=${{ secrets.USER }} -password=${{ secrets.DB_PASSWORD }} -schemas=${{ secrets.DB }}
 
       - name: Upload SQLFluff Report
         if: failure()
