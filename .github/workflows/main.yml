@@ -6,23 +6,6 @@ on:
       - main
 
 jobs:
-#  lint:
-#    runs-on: self-hosted
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v2
-
-#      - name: Sql Lint Check
-#        uses: Bidaya0/sql-lint-in-action@v0.0.2
-#        with:
-#          path: ${{ github.workspace }}/Coffee/migrations/*.sql
-#          host: 192.168.0.54
-#          user: ${{ secrets.USER }}
-#          password: ${{ secrets.DB_PASSWORD }}
-#          driver: mysql
-#          port: 3306
-#          ignore_errors:
-
   sqlfluff:
     runs-on: self-hosted
     steps:
@@ -39,14 +22,16 @@ jobs:
           config: "${{ github.workspace }}/.sqlfluff"
           paths: ${{ github.workspace }}/Coffee/migrations/*.sql
           github_base_ref: "main"
-      - name: Save SQLFluff Report
+      - name: Upload SQLFluff Lint Report
         if: failure()
-        run: echo "${{ steps.lint-sql.outputs.sqlfluff-results }}" > sqlfluff_OutPut_report.xml
+        uses: actions/upload-artifact@v2
+        with:
+          name: sqlfluff-lint-report
+          path: sqlfluff_lint_report.xml
 
   migrate:
     runs-on: self-hosted
     needs:
-#      - lint
       - sqlfluff
 
     steps:
@@ -61,9 +46,6 @@ jobs:
           password: ${{ secrets.DB_PASSWORD }}
         env:
           FLYWAY_VALIDATE_MIGRATION_NAMING: true
-
-#      - name: Migrate
-#        run: ${{secrets.FLYWAY}} migrate -configFiles=${{ github.workspace }}/Coffee/flyway.toml,${{ github.workspace }}/Coffee/flyway.user.toml -workingDirectory=${{ github.workspace }}/Coffee -reportEnabled=false -environment=development -url=jdbc:mysql://192.168.0.54:3306 -user=${{ secrets.USER }} -password=${{ secrets.DB_PASSWORD }} -schemas=${{ secrets.DB }}
 
       - name: Upload SQLFluff Report
         if: failure()
