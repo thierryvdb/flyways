@@ -31,6 +31,8 @@ jobs:
 
   info:
     runs-on: self-hosted
+    needs:
+      - persist
     steps:      
       - name: Runner Execution Directory
         run: |
