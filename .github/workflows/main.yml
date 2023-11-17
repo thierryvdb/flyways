@@ -12,13 +12,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Extract Project Name
+        id: extract-project
+        run: echo "::set-output name=project_name::$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)"
+
+      - name: Combine Repository Name and Workspace
+        id: combine-names
+        run: echo "::set-output name=combined_name::${{ github.workspace }}/${{ steps.extract-project.outputs.project_name }}"
+
+      - name: Display Combined Name
+        run: echo " ${{ steps.combine-names.outputs.combined_name }}"  
+
+      - name: Runner Execution Directory
+        run: |
+          echo ${{ github.workspace }}
+
       - name: List SQL files
         run: |
           find ${{ github.workspace }} -name "*.sql"  
-
-      - name: Where am I => PWD
-        run: |
-          ${{ github.workspace }}
 
       - name: Check with SqlFluff
         id: lint-sql
