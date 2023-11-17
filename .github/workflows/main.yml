@@ -9,6 +9,14 @@ jobs:
   info:
     runs-on: self-hosted
     steps:
+      - name: Clean Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ github.workspace }}/Coffee  # Adjust the path based on your project structure
+          key: ${{ runner.os }}-${{ hashFiles('**/*.sql') }}
+          restore-keys: |
+            ${{ runner.os }}
       - name: Checkout code
         uses: actions/checkout@v2
 
