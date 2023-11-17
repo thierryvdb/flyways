@@ -6,22 +6,11 @@ on:
       - main
 
 jobs:
-  sqlfluff-lint:
+  info:
     runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Extract Project Name
-        id: extract-project
-        run: echo "::set-output name=project_name::$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)"
-
-      - name: Combine Repository Name and Workspace
-        id: combine-names
-        run: echo "::set-output name=combined_name::${{ github.workspace }}/${{ steps.extract-project.outputs.project_name }}"
-
-      - name: Display Combined Name
-        run: echo " ${{ steps.combine-names.outputs.combined_name }}"  
 
       - name: Runner Execution Directory
         run: |
@@ -29,8 +18,14 @@ jobs:
 
       - name: List SQL files
         run: |
-          find ${{ github.workspace }} -name "*.sql"  
+          find ${{ github.workspace }} -name "*.sql" 
 
+
+
+  sqlfluff-lint:
+    runs-on: self-hosted
+    needs: info
+    steps:
       - name: Check with SqlFluff
         id: lint-sql
         uses: yu-iskw/action-sqlfluff@v3
@@ -53,8 +48,6 @@ jobs:
   sqlfluff-fix:
     runs-on: self-hosted
     needs: sqlfluff-lint
-    if: failure()
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
