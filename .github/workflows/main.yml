@@ -19,7 +19,7 @@ jobs:
       - name: Check with SqlFluff and Reviewdog
         id: lint-sql
         run: |
-         /home/thierry/.local/bin/sqlfluff lint --format=unix ${{ github.workspace }}/Coffee/migrations/*.sql | /home/thierry/action-setup/bin/reviewdog -f=sqlfluff -reporter=github-pr-review -level=info
+         /home/thierry/.local/bin/sqlfluff lint --format=unix ${{ github.workspace }}/Coffee/migrations/*.sql | /home/thierry/action-setup/bin/reviewdog -reporter=github-pr-review -level=info
 
       - name: Save SQLFluff Report
         if: failure()
