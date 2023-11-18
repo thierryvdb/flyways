@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  persist:
+  info:
     runs-on: self-hosted
     steps:
       - name: Clean Cache
@@ -20,26 +20,7 @@ jobs:
       
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          path: preseeded-code
 
-      - name: Persist code to workspace
-        uses: actions/upload-artifact@v2
-        with:
-          name: preseeded-code
-          path: preseeded-code
-
-  info:
-    runs-on: self-hosted
-    needs:
-      - persist
-    steps:      
-      - name: Attach code from workspace
-        uses: actions/download-artifact@v2
-        with:
-          name: preseeded-code
-          path: preseeded-code
-      
       - name: Runner Execution Directory
         run: |
           echo ${{ github.workspace }}
@@ -47,17 +28,12 @@ jobs:
       - name: List SQL files
         run: |
           find ${{ github.workspace }} -name "*.sql" 
-
+  
+  
   sqlfluff-lint:
     runs-on: self-hosted
     needs: info
     steps:
-      - name: Attach code from workspace
-        uses: actions/download-artifact@v2
-        with:
-          name: preseeded-code
-          path: preseeded-code
-
       - name: Check with SqlFluff
         id: lint-sql
         uses: yu-iskw/action-sqlfluff@v3
@@ -66,8 +42,8 @@ jobs:
           reporter: github-pr-review
           sqlfluff_version: "2.0.7"
           sqlfluff_command: "lint"
-          config: "preseeded-code/.sqlfluff"
-          paths: "preseeded-code/**/*.sql"
+          config: "${{ github.workspace }}/.sqlfluff"
+          paths: "${{ github.workspace }}/**/*.sql"
           github_base_ref: "main"
 
       - name: Upload SQLFluff Lint Error Report
@@ -75,27 +51,20 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: sqlfluff-lint-error-report
-          path: preseeded-code/fixed_sqlfluff_lint_error_report.xml
+          path: ${{ github.workspace }}/fixed_sqlfluff_lint_error_report.xml
 
   sqlfluff-fix:
     runs-on: self-hosted
     needs: sqlfluff-lint
     steps:
-
-      - name: Attach code from workspace
-        uses: actions/download-artifact@v2
-        with:
-          name: preseeded-code
-          path: preseeded-code
-
       - name: Fix with SqlFluff
         uses: yu-iskw/action-sqlfluff@v3
         with:
           github_token: ${{ secrets.github_token }}
           sqlfluff_version: "2.0.7"
           sqlfluff_command: "fix"
-          config: "preseeded-code/.sqlfluff"
-          paths: "preseeded-code/**/*.sql"
+          config: "${{ github.workspace }}/.sqlfluff"
+          paths: "${{ github.workspace }}/**/*.sql"
           github_base_ref: "main"
 
       - name: Upload SQLFluff Fix Error Report
@@ -103,22 +72,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: sqlfluff-fix-error-report
-          path: preseeded-code/fixed_sqlfluff_fix_error_report.xml
+          path: ${{ github.workspace }}/fixed_sqlfluff_fix_error_report.xml
 
   migrate:
     runs-on: self-hosted
     needs:
       - sqlfluff-fix
-
     steps:
-
-      - name: Attach code from workspace
-        uses: actions/download-artifact@v2
-        with:
-          name: preseeded-code
-          path: preseeded-code
-
-
       - name: Migrate Step
         uses: joshuaavalon/flyway-action@v3.0.0
         with:
@@ -133,4 +93,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: flyway-report
-          path: preseeded-code/flyway_report.xml
+          path: ${{ github.workspace }}/flyway_report.xml
