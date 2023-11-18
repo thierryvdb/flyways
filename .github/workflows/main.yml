@@ -9,7 +9,15 @@ jobs:
   info:
     runs-on: self-hosted
     steps:
-     
+      - name: Clean Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ${{ github.workspace }}/Coffee 
+          key: ${{ runner.os }}-${{ hashFiles('**/*.sql') }}
+          restore-keys: |
+            ${{ runner.os }}
+      
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -26,6 +34,9 @@ jobs:
     runs-on: self-hosted
     needs: info
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Check with SqlFluff
         id: lint-sql
         uses: yu-iskw/action-sqlfluff@v3
@@ -45,19 +56,61 @@ jobs:
           name: sqlfluff-lint-error-report
           path: ${{ github.workspace }}/fixed_sqlfluff_lint_error_report.xml
 
+  sqlfluff-fix:
+    runs-on: self-hosted
+    needs: sqlfluff-lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Fix with SqlFluff
+        uses: yu-iskw/action-sqlfluff@v3
+        with:
+          github_token: ${{ secrets.github_token }}
+          sqlfluff_version: "2.0.7"
+          sqlfluff_command: "fix"
+          config: "${{ github.workspace }}/.sqlfluff"
+          paths: "${{ github.workspace }}/**/*.sql"
+          github_base_ref: "main"
+
+      - name: Upload SQLFluff Fix Error Report
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: sqlfluff-fix-error-report
+          path: ${{ github.workspace }}/fixed_sqlfluff_fix_error_report.xml
+
   migrate:
     runs-on: self-hosted
     needs:
-      - sqlfluff-lint
+      - sqlfluff-fix
     steps:
-      - name: Migrate Step
-        uses: joshuaavalon/flyway-action@v3.0.0
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
         with:
-          url: jdbc:mysql://192.168.0.116:3306/${{ secrets.DB }}
-          user: ${{ secrets.USER }}
-          password: ${{ secrets.DB_PASSWORD }}
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: Run Flyway Migrations
+        run: |
+          # Download Flyway command-line tool
+          wget -qO flyway.tar.gz https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/7.14.0/flyway-commandline-7.14.0-linux-x64.tar.gz
+          tar -xzf flyway.tar.gz
+          export PATH=$PATH:$(pwd)/flyway-7.14.0
+
+          # Set Flyway configurations
+          export FLYWAY_URL=jdbc:mysql://192.168.0.116:3306/${{ secrets.DB }}
+          export FLYWAY_USER=${{ secrets.USER }}
+          export FLYWAY_PASSWORD=${{ secrets.DB_PASSWORD }}
+          export FLYWAY_LOCATIONS=${{ github.workspace }}/preseeded-code
+
+          # Run Flyway Migrations
+          flyway migrate
         env:
-          FLYWAY_VALIDATE_MIGRATION_NAMING: true
+          FLYWAY_EDITION: 'community'
 
       - name: Upload Flyway Report
         if: failure()
