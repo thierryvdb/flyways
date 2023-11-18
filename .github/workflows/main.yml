@@ -52,6 +52,12 @@ jobs:
     runs-on: self-hosted
     needs: info
     steps:
+      - name: Attach code from workspace
+        uses: actions/download-artifact@v2
+        with:
+          name: preseeded-code
+          path: preseeded-code
+
       - name: Check with SqlFluff
         id: lint-sql
         uses: yu-iskw/action-sqlfluff@v3
@@ -75,6 +81,13 @@ jobs:
     runs-on: self-hosted
     needs: sqlfluff-lint
     steps:
+
+      - name: Attach code from workspace
+        uses: actions/download-artifact@v2
+        with:
+          name: preseeded-code
+          path: preseeded-code
+
       - name: Fix with SqlFluff
         uses: yu-iskw/action-sqlfluff@v3
         with:
@@ -98,6 +111,14 @@ jobs:
       - sqlfluff-fix
 
     steps:
+
+      - name: Attach code from workspace
+        uses: actions/download-artifact@v2
+        with:
+          name: preseeded-code
+          path: preseeded-code
+
+
       - name: Migrate Step
         uses: joshuaavalon/flyway-action@v3.0.0
         with:
