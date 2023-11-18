@@ -1,2 +1,0 @@
-CREATE TABLE WrongSyntaxTableDD
-    ID INT AUTO_INCREMENT;
