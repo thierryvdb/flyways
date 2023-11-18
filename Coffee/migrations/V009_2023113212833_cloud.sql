@@ -1,5 +1,2 @@
-CREATE TABLE WrongSyntaxTable
-    ID INT AUTO_INCREMENT,
-    Name VARCHAR(50),
-    InvalidColumn,
-    name notfo;
+CREATE TABLE WrongSyntaxTableDD
+    ID INT AUTO_INCREMENT;
