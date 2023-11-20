@@ -1,4 +1,4 @@
-name: Main
+name: Flyway Migration
 
 on:
   push:
@@ -6,64 +6,23 @@ on:
       - main
 
 jobs:
-  sqlfluff-lint:
-    runs-on: self-hosted
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Check with SqlFluff
-        id: lint-sql
-        uses: yu-iskw/action-sqlfluff@v3
-        with:
-          github_token: ${{ secrets.github_token }}
-          reporter: info
-          sqlfluff_version: "2.0.7"
-          sqlfluff_command: "lint"
-          config: "${{ github.workspace }}/.sqlfluff"
-          paths: "${{ github.workspace }}/Coffee/migrations"
-          github_base_ref: "main"
-
-      - name: Convert SqlFluff output to ReviewDog format
-        if: steps.lint-sql.outputs.has_errors == 'true'
-        run: |
-          python3 -m xmljson -d xml2json ${{ github.workspace }}/fixed_sqlfluff_lint_error_report.xml > ${{ github.workspace }}/sqlfluff_reviewdog.json
-
   migrate:
-    runs-on: self-hosted
-    needs:
-      - sqlfluff-lint
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Java
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
+      - name: Set up Flyway
+        run: |
+          docker pull flyway/flyway:7.14.0
+          export FLYWAY_URL=jdbc:mysql://192.168.0.161:3306/${{ secrets.DB }}
+          export FLYWAY_USER=${{ secrets.USER }}
+          export FLYWAY_PASSWORD=${{ secrets.DB_PASSWORD }}
+          export FLYWAY_LOCATIONS=filesystem:${{ github.workspace }}/Coffee/migrations
 
       - name: Run Flyway Migrations
         run: |
-          # Download Flyway command-line tool
-          wget -qO flyway.tar.gz https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/7.14.0/flyway-commandline-7.14.0-linux-x64.tar.gz
-          tar -xzf flyway.tar.gz
-          export PATH=$PATH:$(pwd)/flyway-7.14.0
-
-          # Set Flyway configurations
-          export FLYWAY_URL=jdbc:mysql://192.168.0.191:3306/${{ secrets.DB }}
-          export FLYWAY_USER=${{ secrets.USER }}
-          export FLYWAY_PASSWORD=${{ secrets.DB_PASSWORD }}
-          export FLYWAY_LOCATIONS=${{ github.workspace }}/preseeded-code
-
-          # Run Flyway Migrations
-          flyway migrate
-        env:
-          FLYWAY_EDITION: 'teams'
-
-      - name: Upload Flyway Report
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: flyway-report
-          path: ${{ github.workspace }}/flyway_report.xml
+          docker run --rm -v "${{ github.workspace }}/Coffee/migrations:/flyway/sql" \
+            -e FLYWAY_URL -e FLYWAY_USER -e FLYWAY_PASSWORD -e FLYWAY_LOCATIONS \
+            flyway/flyway:7.14.0 migrate
