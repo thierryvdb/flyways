@@ -44,4 +44,4 @@ jobs:
 
       - name: Lint SQL files and generate reviewdog report
         run: |
-          sqlfluff lint ${{ needs.info.outputs.step1_result }}/Coffee/migrations --dialect mysql --format=human | /home/thierry/go/bin/reviewdog -f=sqlfluff -reporter=github-pr-review -tee -level=info
+          sqlfluff lint ${{ needs.info.outputs.step1_result }}/Coffee/migrations --dialect mysql --format=human --report > testereport.txt
