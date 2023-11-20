@@ -9,17 +9,14 @@ jobs:
   info:
     runs-on: self-hosted
     steps:
-      
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Runner Execution Directory
-        run: |
-          echo ${{ github.workspace }}
+        run: echo ${{ github.workspace }}
 
       - name: List SQL files
-        run: |
-          find ${{ github.workspace }} -name "*.sql" 
+        run: find ${{ github.workspace }} -name "*.sql"
   
   
   sqlfluff-lint:
@@ -34,48 +31,30 @@ jobs:
         uses: yu-iskw/action-sqlfluff@v3
         with:
           github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
+          reporter: checkstyle
           sqlfluff_version: "2.0.7"
           sqlfluff_command: "lint"
           config: "${{ github.workspace }}/.sqlfluff"
           paths: "${{ github.workspace }}/**/*.sql"
           github_base_ref: "main"
 
-      - name: Upload SQLFluff Lint Error Report
-        if: failure()
-        uses: actions/upload-artifact@v2
-        with:
-          name: sqlfluff-lint-error-report
-          path: ${{ github.workspace }}/fixed_sqlfluff_lint_error_report.xml
+      - name: Convert SqlFluff output to ReviewDog format
+        if: steps.lint-sql.outputs.has_errors == 'true'
+        run: |
+          python3 -m xmljson -d checkstyle -t json ${{ github.workspace }}/fixed_sqlfluff_lint_error_report.xml > ${{ github.workspace }}/sqlfluff_reviewdog.json
 
-  sqlfluff-fix:
-    runs-on: self-hosted
-    needs: sqlfluff-lint
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Fix with SqlFluff
-        uses: yu-iskw/action-sqlfluff@v3
+      - name: ReviewDog report on linting errors
+        if: steps.lint-sql.outputs.has_errors == 'true'
+        uses: reviewdog/action-setup@v2
         with:
-          github_token: ${{ secrets.github_token }}
-          sqlfluff_version: "2.0.7"
-          sqlfluff_command: "fix"
-          config: "${{ github.workspace }}/.sqlfluff"
-          paths: "${{ github.workspace }}/**/*.sql"
-          github_base_ref: "main"
-
-      - name: Upload SQLFluff Fix Error Report
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: sqlfluff-fix-error-report
-          path: ${{ github.workspace }}/fixed_sqlfluff_fix_error_report.xml
+          reviewdog_version: latest
+        run: |
+          reviewdog -f=checkstyle -name=sqlfluff -reporter=github-pr-review -fail-on-error=false -level=info -input=${{ github.workspace }}/sqlfluff_reviewdog.json
 
   migrate:
     runs-on: self-hosted
     needs:
-      - sqlfluff-fix
+      - sqlfluff-lint
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
