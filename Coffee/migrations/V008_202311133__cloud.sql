@@ -1,3 +1,3 @@
-create table (
+create table nome(
     nome varchar(10)
 );
