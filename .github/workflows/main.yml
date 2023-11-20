@@ -9,7 +9,6 @@ jobs:
   info:
     runs-on: self-hosted
     steps:
-     
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -19,13 +18,13 @@ jobs:
 
       - name: List SQL files
         run: |
-          find ${{ github.workspace }} -name "*.sql" 
-        
+          find ${{ github.workspace }} -name "*.sql"
+
   sqlfluff-lint:
-    needs: 
-      - info 
-    runs-on: self-hosted    
-    steps: 
+    needs:
+      - info
+    runs-on: self-hosted
+    steps:
       - name: Lint SQL files
         run: |
-          sqlfluff lint ${{ github.workspace }}/Coffee/migrations
+          sqlfluff lint ${{ github.workspace }}/Coffee/migrations --dialect mysql
