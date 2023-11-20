@@ -35,11 +35,6 @@ jobs:
       - name: Set GitHub token for reviewdog
         run: echo "REVIEWDOG_GITHUB_API_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
 
-      - name: Get info result
-        id: step1
-        run: |
-          echo "Result from info: ${{ needs.info.outputs.step1_result }}"
-
       - name: Lint SQL files and generate reviewdog report
         run: |
           sqlfluff lint ${{ github.workspace }}/Coffee/migrations --dialect mysql --format=human --report > testereport.txt
