@@ -51,7 +51,8 @@ jobs:
 
       - name: Get info result
         id: step1
-        run: echo "Result from info: ${{ needs.info.outputs.step1_result }}"
+        run: |
+          echo "Result from info: ${{ needs.info.outputs.step1_result }}"
 
       - name: Lint SQL files and generate reviewdog report
         run: |
