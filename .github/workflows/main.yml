@@ -43,13 +43,10 @@ jobs:
         run: |
           python3 -m xmljson -d checkstyle -t json ${{ github.workspace }}/fixed_sqlfluff_lint_error_report.xml > ${{ github.workspace }}/sqlfluff_reviewdog.json
 
-      - name: ReviewDog report on linting errors
-        if: steps.lint-sql.outputs.has_errors == 'true'
-        uses: reviewdog/action-setup@v2
-        with:
-          reviewdog_version: latest
-        run: |
-          reviewdog -f=checkstyle -name=sqlfluff -reporter=github-pr-review -fail-on-error=false -level=info -input=${{ github.workspace }}/sqlfluff_reviewdog.json
+      -- name: ReviewDog report on linting errors
+      if: steps.lint-sql.outputs.has_errors == 'true'
+      run: |
+        docker run -v "$(pwd):/mnt" reviewdog/action-reviewdog -reporter=github-pr-review -level=info -filter-mode=nofilter -fail-on-error=false -name="sqlfluff" -input=/mnt/sqlfluff_reviewdog.json
 
   migrate:
     runs-on: self-hosted
