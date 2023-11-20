@@ -21,6 +21,8 @@ jobs:
           find ${{ github.workspace }} -name "*.sql"
 
   lint:
+    needs:
+      - info
     runs-on: self-hosted
 
     steps:
