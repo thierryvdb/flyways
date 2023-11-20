@@ -39,7 +39,7 @@ jobs:
           github_base_ref: "main"
 
       - name: Convert SqlFluff output to ReviewDog format
-        if: steps.lint-sql.outputs.has_errors == 'true'
+        #if: steps.lint-sql.outputs.has_errors == 'true'
         run: |
           python3 -m xmljson -d checkstyle -t json ${{ github.workspace }}/fixed_sqlfluff_lint_error_report.xml > ${{ github.workspace }}/sqlfluff_reviewdog.json
 
