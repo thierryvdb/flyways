@@ -49,6 +49,6 @@ jobs:
 
       - name: Fix Sql Files and generate report
         run: |
-          find ${{ github.workspace}}/*/migrtions -name '*.sql' -exec sqlfluff fix {} --dialect mysql
+          find ${{ github.workspace}}/*/migrtions -name '*.sql' -exec sqlfluff fix {} --dialect mysql {} \;
       
 
