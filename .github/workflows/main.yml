@@ -8,6 +8,11 @@ on:
     branches:
       - main
 
+env:
+  FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
+  FIRST_UNDO_SCRIPT: ${{ secrets.FIRST_UNDO_SCRIPT }}
+  ACTIONS_RUNNER_DEBUG: true
+
 jobs:
   info:
     runs-on: self-hosted
@@ -35,20 +40,79 @@ jobs:
       - name: Set GitHub token for reviewdog
         run: echo "REVIEWDOG_GITHUB_API_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
 
-      - name: Lint SQL files and generate  report
+      - name: Lint SQL files and generate report
         run: |
-          find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff lint {} --dialect mysql --format=human  \; >> testereport.txt
-  
-  fix:
+          find ${{ github.workspace }}/*/migrations -name '*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; >> testereport.txt
+
+# Uncomment the following section if you want to include a "fix" job
+#   fix:
+#     needs:
+#       - lint
+#     runs-on: self-hosted
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+#
+#       - name: Fix SQL Files and generate report
+#         run: |
+#           find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql {} \;
+
+# Newly added build job
+  build:
     needs:
       - lint
+    name: Deploy Build
     runs-on: self-hosted
+    environment: 'build'
+    env:
+      stage: 'Build'
+      databaseName: ${{ secrets.databaseName }}
+      JDBC: ${{ secrets.JDBC }}
+      userName: ${{ secrets.userName }}
+      password: ${{ secrets.password }}
+      displayName: 'Build'
+      executeBuild: true
+      publishArtifacts: true
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Fix Sql Files and generate report
+      - name: Create Flyway Command Variable
+        if: ${{ true }}
         run: |
-          find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql {} \;
-      
+          echo "FLYWAY_COMMAND='flyway -user=${{ env.userName }} -password=${{ env.password }} -licenseKey=${{ env.FLYWAY_LICENSE_KEY }} -configFiles=${{ GITHUB.WORKSPACE }}/flyway.conf -locations=filesystem:${{ GITHUB.WORKSPACE }}/migrations -baselineOnMigrate=true'" >> $GITHUB_ENV
+        continue-on-error: true
 
+      - name: Test Flyway Command using Variable
+        if: ${{ true }}
+        run: |
+          echo "The working directory is - ${{ GITHUB.WORKSPACE }}"
+          echo "The license key is = ${{ env.FLYWAY_LICENSE_KEY }}"
+          eval ${{ env.FLYWAY_COMMAND }} info -url="${{ env.JDBC }}"
+
+      - name: Clean Build DB
+        if: env.executeBuild == 'true'
+        run: |
+          eval ${{ env.FLYWAY_COMMAND }} info clean info -url="${{ env.JDBC }}" -cleanDisabled='false'
+
+      - name: Migrate Build DB
+        if: env.executeBuild == 'true'
+        run: |
+          eval ${{ env.FLYWAY_COMMAND }} info migrate info -url="${{ env.JDBC }}" -cleanDisabled='false'
+
+      - name: Undo Build DB
+        if: env.executeBuild == 'true'
+        run: |
+          eval ${{ env.FLYWAY_COMMAND }} info undo info -url="${{ env.JDBC }}" -cleanDisabled='false' -target="${{ env.FIRST_UNDO_SCRIPT }}"
+
+      - name: Stage files for publishing
+        if: env.publishArtifacts == 'true'
+        run: |
+          cp -R ${{ GITHUB.WORKSPACE }}/migrations Artifact_Files/Migration/
+
+      - name: Publish Validated Migration Scripts as Artifact
+        if: env.publishArtifacts == 'true'
+        uses: actions/upload-artifact@v3.1.1
+        with:
+          name: flyway-build-artifact
+          path: Artifact_Files/Migration/
