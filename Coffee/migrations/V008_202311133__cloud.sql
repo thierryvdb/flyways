@@ -1,3 +1,3 @@
 create table (
-    nome varchar(10);
-)
+    nome varchar(10)
+);
