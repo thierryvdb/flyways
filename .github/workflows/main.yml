@@ -21,9 +21,11 @@ jobs:
         run: |
           find ${{ github.workspace }} -name "*.sql" 
         
-  sqlfluff-lint: 
-      runs-on: self-hosted    
-      steps: 
+  sqlfluff-lint:
+    needs: 
+      - info 
+    runs-on: self-hosted    
+    steps: 
       - name: Lint SQL files
         run: |
           sqlfluff lint ${{ github.workspace }}/Coffee/migrations
