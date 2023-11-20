@@ -11,8 +11,6 @@ on:
 jobs:
   info:
     runs-on: self-hosted
-    outputs:
-      step1_result: ${{ steps.step1_result.outputs.result }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -44,4 +42,4 @@ jobs:
 
       - name: Lint SQL files and generate reviewdog report
         run: |
-          sqlfluff lint ${{ needs.info.outputs.step1_result }}/Coffee/migrations --dialect mysql --format=human --report > testereport.txt
+          sqlfluff lint ${{ github.workspace }}/Coffee/migrations --dialect mysql --format=human --report > testereport.txt
