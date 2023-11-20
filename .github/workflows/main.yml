@@ -6,22 +6,8 @@ on:
       - main
 
 jobs:
-  info:
-    runs-on: self-hosted
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Runner Execution Directory
-        run: echo ${{ github.workspace }}
-
-      - name: List SQL files
-        run: find ${{ github.workspace }} -name "*.sql"
-  
-  
   sqlfluff-lint:
     runs-on: self-hosted
-    needs: info
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
