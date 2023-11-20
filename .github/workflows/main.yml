@@ -35,9 +35,20 @@ jobs:
       - name: Set GitHub token for reviewdog
         run: echo "REVIEWDOG_GITHUB_API_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
 
-      - name: Lint SQL files and generate reviewdog report
+      - name: Lint SQL files and generate  report
         run: |
           find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff lint {} --dialect mysql --format=human  \; >> testereport.txt
+  
+  fix:
+    needs:
+      - lint
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
+      - name: Fix Sql Files and generate report
+        run: |
+          find ${{ github.workspace}}/*/migrtions -name '*.sql' -exec sqlfluff fix {} --dialect mysql
       
 
