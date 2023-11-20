@@ -38,6 +38,11 @@ url = "jdbc:mysql://192.168.0.191:3306"
 schemas = [ "coffeeshop" ]
 displayName = "Production"
 
+[environments.build]
+url = "jdbc:mysql://192.168.0.191:3306"
+schemas = [ "coffeeshop" ]
+displayName = "build"
+
 [environments.coffeeshopshadow]
 url = "jdbc:mysql://192.168.0.191:3306"
 schemas = [ "coffeeshop_shadow" ]
