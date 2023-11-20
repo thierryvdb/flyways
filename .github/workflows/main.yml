@@ -25,6 +25,7 @@ jobs:
 
       - name: Install reviewdog
         run: |
+          echo "Installing reviewdog"
           # Replace the URL with the latest release of reviewdog
           curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v0.12.0
 
