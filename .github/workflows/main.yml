@@ -87,7 +87,6 @@ jobs:
         if: ${{ true }}
         run: |
           echo "The working directory is - ${{ GITHUB.WORKSPACE }}"
-          echo "The license key is = ${{ env.FLYWAY_LICENSE_KEY }}"
           eval ${{ env.FLYWAY_COMMAND }} info -url="${{ env.JDBC }}"
 
       - name: Clean Build DB
