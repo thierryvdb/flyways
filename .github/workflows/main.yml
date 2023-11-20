@@ -66,7 +66,7 @@ jobs:
           export PATH=$PATH:$(pwd)/flyway-7.14.0
 
           # Set Flyway configurations
-          export FLYWAY_URL=jdbc:mysql://192.168.0.116:3306/${{ secrets.DB }}
+          export FLYWAY_URL=jdbc:mysql://192.168.0.191:3306/${{ secrets.DB }}
           export FLYWAY_USER=${{ secrets.USER }}
           export FLYWAY_PASSWORD=${{ secrets.DB_PASSWORD }}
           export FLYWAY_LOCATIONS=${{ github.workspace }}/preseeded-code
@@ -74,7 +74,7 @@ jobs:
           # Run Flyway Migrations
           flyway migrate
         env:
-          FLYWAY_EDITION: 'community'
+          FLYWAY_EDITION: 'teams'
 
       - name: Upload Flyway Report
         if: failure()
