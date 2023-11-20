@@ -47,7 +47,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - name: Create Flyway Command Variable
+        if: ${{ true }}
+        run: |
+          echo "FLYWAY_COMMAND=sudo /usr/local/bin/flyway -user='${{ env.userName }}' -password='${{ env.password }}' -licenseKey='${{ env.FLYWAY_LICENSE_KEY }}' -configFiles='${{ GITHUB.WORKSPACE }}/flyway.conf' -locations='filesystem:${{ GITHUB.WORKSPACE }}/migrations' -baselineOnMigrate='true'" >> $GITHUB_ENV
         continue-on-error: true
+    
         env:
           flyway: sudo /usr/local/bin/flyway -user="${{ env.userName }}" -password="${{ env.password }}" -licenseKey="${{ env.FLYWAY_LICENSE_KEY }}" -configFiles="${{ GITHUB.WORKSPACE }}/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/migrations" -baselineOnMigrate="true"
           
