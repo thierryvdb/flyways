@@ -17,8 +17,8 @@ jobs:
         run: |
           docker pull flyway/flyway:7.14.0
           export FLYWAY_URL=jdbc:mysql://192.168.0.191:3306/${{ secrets.DB }}
-          export FLYWAY_USER=${{ secrets.USER }}
-          export FLYWAY_PASSWORD=${{ secrets.DB_PASSWORD }}
+          export FLYWAY_USER=coffeemng
+          export FLYWAY_PASSWORD=r0y4lcoffee
           export FLYWAY_LOCATIONS=filesystem:${{ github.workspace }}/Coffee/migrations
 
       - name: Run Flyway Migrations
