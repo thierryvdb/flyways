@@ -80,7 +80,7 @@ jobs:
       - name: Create Flyway Command Variable
         if: ${{ true }}
         run: |
-          echo "FLYWAY_COMMAND='sudo /usr/local/bin/flyway -user=${{ env.userName }} -password=${{ env.password }} -licenseKey=${{ env.FLYWAY_LICENSE_KEY }} -configFiles=${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml -locations=filesystem:${{ GITHUB.WORKSPACE }}/Coffee/migrations -baselineOnMigrate=true'" >> $GITHUB_ENV
+          echo "FLYWAY_COMMAND='sudo /usr/local/bin/flyway -user=${{ env.userName }} -password=${{ env.password }}  -configFiles=${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml -locations=filesystem:${{ GITHUB.WORKSPACE }}/Coffee/migrations -baselineOnMigrate=true'" >> $GITHUB_ENV
         continue-on-error: true
 
       - name: Clean Build DB
