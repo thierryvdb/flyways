@@ -37,4 +37,4 @@ jobs:
 
       - name: Lint SQL files and generate reviewdog report
         run: |
-          find ${{ github.workspace}}/Coffee/migrations -name '*.sql' -exec sqlfluff lint {} --dialect mysql --format=human  \; > testereport.txt
+          find ${{ github.workspace}}/Coffee/migrations -name '*.sql' -exec sqlfluff lint {} --dialect mysql --format=human  \; > testereport.html
