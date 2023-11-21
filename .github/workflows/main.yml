@@ -132,6 +132,7 @@ jobs:
       - name: Create Check Reports
         if: env.generateDriftAndChangeReport == 'true'
         run: |
+          mkdir -p ${{ GITHUB.WORKSPACE }}/Coffee/reports
           eval ${{ env.FLYWAY_COMMAND }} -user="${{ env.userName }}" -password="${{ env.password }}" -baselineOnMigrate="true"  -configFiles="${{ GITHUB.WORKSPACE }}/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/*/migrations" check -dryrun -changes -drift "-check.failOnDrift=${{ env.failReleaseIfDriftDetected }}" "-check.buildUrl=${{ env.check_JDBC }}" "-check.buildUser=${{ env.check_userName }}" "-check.buildPassword=${{ env.check_password }}" -url="${{ env.JDBC }}" "-check.reportFilename=${{ GITHUB.WORKSPACE }}/Coffee/reports/${{ env.databaseName }}-Run-${{ GITHUB.RUN_ID }}-Check-Report.html"
         continue-on-error: true
 
