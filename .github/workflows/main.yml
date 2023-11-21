@@ -96,11 +96,6 @@ jobs:
         run: |
           eval ${{ env.FLYWAY_COMMAND }} info migrate info -url="${{ env.JDBC }}" -cleanDisabled='false'
 
-      - name: Undo Build DB
-        if: env.executeBuild == 'true'
-        run: |
-          eval ${{ env.FLYWAY_COMMAND }} info undo info -url="${{ env.JDBC }}" -cleanDisabled='false' -target="${{ env.FIRST_UNDO_SCRIPT }}"
-
       - name: Stage files for publishing
         if: env.publishArtifacts == 'true'
         run: |
