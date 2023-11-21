@@ -91,8 +91,7 @@ jobs:
           mkdir -p Artifact_Files/Migration/
           cp -R ${{ GITHUB.WORKSPACE }}/Coffee/migrations Artifact_Files/Migration/
 
-      - name: Publish Validated Migration Scripts as Artifact
-        if: env.publishArtifacts == 'true'
+      - name: Publish Validated Migration Scripts as Artifact #if:: env.publishArtifacts == 'true'
         uses: actions/upload-artifact@v3.1.1
         with:
           name: flyway-build-artifact
@@ -127,7 +126,7 @@ jobs:
         
       # Runs the Flyway Check command, to produce a deployment report, against the Production database
       - name: Create Check Reports
-        if: env.generateDriftAndChangeReport == 'true'
+#        if: env.generateDriftAndChangeReport == 'true'
         run: |
           mkdir -p ${{ GITHUB.WORKSPACE }}/Coffee/reports
           eval ${{ env.FLYWAY_COMMAND }} -user="${{ env.userName }}" -password="${{ env.password }}" -baselineOnMigrate="true"  -configFiles="${{ GITHUB.WORKSPACE }}/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/*/migrations" check -dryrun -changes -drift "-check.failOnDrift=${{ env.failReleaseIfDriftDetected }}" "-check.buildUrl=${{ env.JDBC }}" "-check.buildUser=${{ env.username }}" "-check.buildPassword=${{ env.password }}" -url="${{ env.JDBC }}" "-check.reportFilename=${{ GITHUB.WORKSPACE }}/Coffee/reports/${{ env.databaseName }}-Run-${{ GITHUB.RUN_ID }}-Check-Report.html"
