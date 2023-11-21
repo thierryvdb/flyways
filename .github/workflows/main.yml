@@ -37,16 +37,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set GitHub token for reviewdog
-        run: echo "REVIEWDOG_GITHUB_API_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-
       - name: Lint SQL files and generate report
         run: |
           find ${{ github.workspace }}/*/migrations -name '*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; >> testereport.txt
-          if [ $? -ne 0 ]; then
-          echo "Linting failed. Exiting workflow."
-          exit 1
-          fi
+
 # Uncomment the following section if you want to include a "fix" job
 #   fix:
 #     needs:
