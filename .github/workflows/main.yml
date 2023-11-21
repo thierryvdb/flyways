@@ -140,7 +140,7 @@ jobs:
         if: env.publishArtifacts == 'true'
         run: |
           mkdir -p Artifact_Files/Reports/
-          cp -R ${{ GITHUB.WORKSPACE }}/coffee/reports Artifact_Files/Reports/
+          cp -R ${{ GITHUB.WORKSPACE }}/Coffee/reports Artifact_Files/Reports/
 
       - name: Publish Check Report as Artifact
         uses: actions/upload-artifact@v2
