@@ -137,7 +137,7 @@ jobs:
       - name: Stage files for publishing
         if: env.publishArtifacts == 'true'
         run: |
-          mkdir -p Artifact_Files/Reports/
+          mkdir -p Artifact_Files/Reports/ ${{ GITHUB.WORKSPACE }}/Coffee/reports
           cp -R ${{ GITHUB.WORKSPACE }}/Coffee/reports Artifact_Files/Reports/
 
       - name: Publish Check Report as Artifact
