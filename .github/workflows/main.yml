@@ -29,8 +29,8 @@ jobs:
       - info
     runs-on: self-hosted
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#      - name: Checkout code
+#        uses: actions/checkout@v3
 
       - name: Lint SQL files and generate report
         run: |
@@ -67,7 +67,7 @@ jobs:
       publishArtifacts: true
 
     steps:
-      - uses: actions/checkout@v3
+#      - uses: actions/checkout@v3
 
       - name: Create Flyway Command Variable
         if: ${{ true }}
@@ -123,7 +123,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+#      - uses: actions/checkout@v3
         
       # Runs the Flyway Check command, to produce a deployment report, against the Production database
       - name: Create Check Reports
@@ -167,7 +167,7 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+#      - uses: actions/checkout@v3
 
       - name: Create Flyway Command Variable
         if: ${{ true }}
