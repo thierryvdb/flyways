@@ -53,7 +53,7 @@ jobs:
   build:
     needs:
       - lint
-    name: Deploy Build
+    name: Deploy Build - Development Database
     runs-on: self-hosted
     environment: 'build'
     env:
@@ -150,7 +150,7 @@ jobs:
 # step where if migration on in dev, will continue to here
 
   prod:
-    name: Deploy Production
+    name: Deploy Production - Migration
     # The type of runner that the job will run on
     runs-on: self-hosted
     environment: 'prod' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
