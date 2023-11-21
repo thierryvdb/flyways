@@ -168,6 +168,12 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+
+      - name: Create Flyway Command Variable
+        if: ${{ true }}
+        run: |
+          echo "FLYWAY_COMMAND='sudo /usr/local/bin/flyway -user=${{ env.userName }} -password=${{ env.password }}  -configFiles=${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml -locations=filesystem:${{ GITHUB.WORKSPACE }}/Coffee/migrations -baselineOnMigrate=true'" >> $GITHUB_ENV
+        continue-on-error: true
         
       # Runs the Flyway Migrate against the Production database
       - name: Migrate Build DB
