@@ -1,11 +1,11 @@
-name: Manual Delete Old Workflow Runs
+name: Delete Old Workflow Runs
 
 on:
   workflow_dispatch: # Manually trigger the workflow
 
 jobs:
   del_runs:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     permissions:
       actions: write
     steps:
