@@ -117,7 +117,7 @@ jobs:
       # End of Environment Secrets #
       generateDriftAndChangeReport: true
       failReleaseIfDriftDetected: false
-      staticCodeAnalysis: false #Currently not setup in this pipeline
+      staticCodeAnalysis: true #Currently not setup in this pipeline
       publishArtifacts: true
 
     # Steps represent a sequence of tasks that will be executed as part of the job
