@@ -1,0 +1,20 @@
+on:
+    push:
+      branches:
+        - main
+  
+env:
+    FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
+    FIRST_UNDO_SCRIPT: ${{ secrets.FIRST_UNDO_SCRIPT }}
+    ACTIONS_RUNNER_DEBUG: true
+            
+jobs:
+    info:
+      runs-on: self-hosted
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+            
+        - name: List SQL files
+          run: |
+            find ${{ github.workspace }} -name "*.sql"

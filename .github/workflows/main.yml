@@ -14,23 +14,11 @@ env:
   ACTIONS_RUNNER_DEBUG: true
 
 jobs:
-  info:
+  lint:
     runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: List SQL files
-        run: |
-          find ${{ github.workspace }} -name "*.sql"
-
-  lint:
-    needs:
-      - info
-    runs-on: self-hosted
-    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
 
       - name: Lint SQL files and generate report
         run: |
