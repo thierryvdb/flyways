@@ -1,4 +1,4 @@
-create table (
+create table fit(
     gun int
 );
 
