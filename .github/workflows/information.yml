@@ -24,7 +24,7 @@ jobs:
             echo "Committer Name: ${{ github.event.head_commit.committer.name }}"
             echo "Committer Email: ${{ github.event.head_commit.committer.email }}"
             echo "Committer Username: ${{ github.event.head_commit.committer.username }}"
-            
+          shell: /usr/bin/bash -e    
         - name: List SQL files
           run: |
             find ${{ github.workspace }} -name "*.sql"
