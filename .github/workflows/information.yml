@@ -1,9 +1,7 @@
 name: Get Committer Info
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   get-committer-info:
