@@ -21,7 +21,9 @@ jobs:
 
         - name: Who commited?
           run: |
-            echo "${{ github.event.commits.commiter.name}}"
+            echo "Committer Name: ${{ github.event.head_commit.committer.name }}"
+            echo "Committer Email: ${{ github.event.head_commit.committer.email }}"
+            echo "Committer Username: ${{ github.event.head_commit.committer.username }}"
             
         - name: List SQL files
           run: |
