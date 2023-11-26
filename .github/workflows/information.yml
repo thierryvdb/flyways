@@ -19,7 +19,7 @@ jobs:
 
         - name: Who commited?
           run: |
-            echo "${{ github.event.commits}}"
+            echo "${{ github.event.commits.commiter.name}}"
             
         - name: List SQL files
           run: |
