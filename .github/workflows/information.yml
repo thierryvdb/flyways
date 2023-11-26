@@ -1,3 +1,5 @@
+name: Information catcher
+
 on:
     workflow_dispatch: # Manually trigger the workflow
   
