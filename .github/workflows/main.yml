@@ -28,16 +28,13 @@ jobs:
           find ${{ github.workspace }}/*/migrations -name '*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; >> lintReport.txt
 # Uncomment the following section if you want to include a "fix" job
   fix:
-     needs:
-       - lint
-     runs-on: self-hosted
-     steps:
-       - name: Checkout code
-         uses: actions/checkout@v3
-
-       - name: Fix SQL Files and generate report
-         run: |
-           find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql --force \; >> lintFixReport.txt
+    needs:
+      - lint
+    runs-on: self-hosted
+    steps:
+      - name: Fix SQL Files and generate report
+        run: |
+           find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql  --format=human --force \; >> lintFixReport.txt
 
 # Newly added build job - build should be the database that is going to get tested for the new added code
   build:
