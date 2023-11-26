@@ -1,30 +1,30 @@
-name: Information catcher
+name: Get Committer Info
 
 on:
-    workflow_dispatch: # Manually trigger the workflow
-  
-env:
-    FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
-    FIRST_UNDO_SCRIPT: ${{ secrets.FIRST_UNDO_SCRIPT }}
-    ACTIONS_RUNNER_DEBUG: true
-            
-jobs:
-    info:
-      runs-on: self-hosted
-      steps:
-        - name: Checkout code
-          uses: actions/checkout@v3
-        
-        - name: Variable Informations
-          run: |
-            echo "${{ toJson(github)}}"
+  push:
+    branches:
+      - main
 
-        - name: Who commited?
-          run: |
-            echo "Committer Name: ${{ github.event.head_commit.committer.name }}"
-            echo "Committer Email: ${{ github.event.head_commit.committer.email }}"
-            echo "Committer Username: ${{ github.event.head_commit.committer.username }}"
-          shell: /usr/bin/bash -e    
-        - name: List SQL files
-          run: |
-            find ${{ github.workspace }} -name "*.sql"
+jobs:
+  get-committer-info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get Committer GitHub Username
+        id: committer_username
+        run: |
+          COMMITTER_EMAIL=$(git log -1 --pretty=format:%ae)
+          GITHUB_USERNAME=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/search/users?q=$COMMITTER_EMAIL" | jq -r '.items[0].login')
+          echo "::set-output name=COMMITTER_USERNAME::$GITHUB_USERNAME"
+
+      - name: Print Committer Information
+        run: |
+          echo "Committer Name: ${{ github.event.head_commit.committer.name }}"
+          echo "Committer Email: ${{ github.event.head_commit.committer.email }}"
+          echo "Committer GitHub Username: ${{ steps.committer_username.outputs.COMMITTER_USERNAME }}"    
+      
+      - name: List SQL files
+        run: |
+          find ${{ github.workspace }} -name "*.sql"
