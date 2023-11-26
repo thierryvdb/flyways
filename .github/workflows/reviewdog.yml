@@ -1,9 +1,6 @@
 name: reviewdog
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+    workflow_dispatch:
 jobs:
   shellcheck:
     name: runner / shellcheck
@@ -21,12 +18,6 @@ jobs:
           reporter: ${{ steps.reporter.outputs.value }}
           level: warning
 
-  shfmt:
-    name: runner / shfmt
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v2
-      - uses: reviewdog/action-shfmt@v1
 
   actionlint:
     name: runner / actionlint
@@ -34,27 +25,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: reviewdog/action-actionlint@v1
-        with:
-          reporter: github-check
-          level: warning
-
-  misspell:
-    name: runner / misspell
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v2
-      - uses: reviewdog/action-misspell@v1
-        with:
-          reporter: github-check
-          level: warning
-          locale: "US"
-
-  alex:
-    name: runner / alex
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v2
-      - uses: reviewdog/action-alex@v1
         with:
           reporter: github-check
           level: warning
