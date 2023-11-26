@@ -20,7 +20,7 @@ jobs:
       - name: Print Committer Information
         run: |
           echo "Committer Name: ${{ github.event.head_commit.committer.name }}"
-          echo "Committer Email: ${{ github.event.head_commit.committer.email }}"
+          echo "Committer E-mail: ${{ github.event.head_commit.committer.email }}"
           echo "Committer GitHub Username: ${{ steps.committer_username.outputs.COMMITTER_USERNAME }}"    
       
       - name: List SQL files
