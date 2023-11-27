@@ -5,7 +5,7 @@ on:
 
 jobs:
   del_runs:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     permissions:
       actions: write
     steps:
