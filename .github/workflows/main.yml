@@ -26,21 +26,19 @@ jobs:
     steps:
       - name: Checking for possible FAIL
         run: |
-          while IFS= read -r line; do
-            if [[ $line =~ FAIL ]]; then
-              echo "has_fail=true" >> $GITHUB_ENV
-              break
-            else
-              echo "has_fail=false" >> $GITHUB_ENV
-            fi
-            done < lintReport.txt
-          echo "has_fail=true" >> $GITHUB_ENV
+          if grep -q 'FAIL' nada; then
+            echo "FAIL encontrado"
+            echo "HAS_FAIL=true" >> $GITHUB_ENV
+          else
+            echo "Nenhum FAIL encontrado"
+            echo "HAS_FAIL=false" >> $GITHUB_ENV
+          fi
 
   fix:
     needs:
       - check-lint
     runs-on: self-hosted
-    if: ${{ env.has_fail == 'true' }}
+    if: ${{ env.HAS_FAIL == 'true' }}
     steps:
       - name: Fix SQL Files and generate report
         run: |
