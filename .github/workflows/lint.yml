@@ -1,0 +1,40 @@
+name: Lint
+on: 
+  push:
+    branches:
+        - main
+
+env:
+  FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
+  FIRST_UNDO_SCRIPT: ${{ secrets.FIRST_UNDO_SCRIPT }}
+  ACTIONS_RUNNER_DEBUG: true
+
+jobs:
+  lint:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Lint SQL files
+        run: |
+          #find ${{ github.workspace }}/*/migrations -name '*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; >> lintReport.txt
+          find  ${{ github.workspace }}/*/migrations -name 'V*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g' > lintReport.txt
+          
+  fix:
+    needs:
+      - lint
+    runs-on: self-hosted
+    steps:
+      - name: Check for FAIL
+        run: |
+            if grep -q 'FAIL' lintReport.txt; then
+              echo "FAIL found in lintReport.txt. Exiting the workflow."
+            else
+              echo "No FAIL found in lintReport.txt. Continuing with the workflow."
+            fi
+
+      - name: Fix SQL Files and generate report
+        if: success()
+        run: |
+           find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql --force \; >> lintFixReport.txt
