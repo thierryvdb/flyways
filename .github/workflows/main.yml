@@ -29,7 +29,6 @@ jobs:
         run: |
             if grep -q 'FAIL' lintReport.txt; then
               echo "FAIL found in lintReport.txt. Exiting the workflow."
-              break
             else
               echo "No FAIL found in lintReport.txt. Continuing with the workflow."
             fi
@@ -37,7 +36,7 @@ jobs:
       - name: Fix SQL Files and generate report
         if: success()
         run: |
-           find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql  --format=human --force \; >> lintFixReport.txt
+           find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql --force \; >> lintFixReport.txt
 
   build:
     needs:
