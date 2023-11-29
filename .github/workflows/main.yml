@@ -15,17 +15,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Lint SQL files and generate report
+      - name: Lint SQL files
         run: |
           #find ${{ github.workspace }}/*/migrations -name '*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; >> lintReport.txt
           find  ${{ github.workspace }}/*/migrations -name 'V*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g' > lintReport.txt
-          echo "next line"
-
+          
+  check-lint:
+    needs: lint
+    runs-on: self-hosted
+    steps:
+      - name: Checking for possible FAIL
+        run: |
+          while IFS= read -r line; do
+          if [[ $line =~ FAIL ]]; then
+            echo "::set-env name=has_fail::true"
+            # I'll try to fix it now
+          else
+            echo "::set-env name=has_fail::false"
+            # No failure found
+          fi
+          done < lintReport.txt
 
   fix:
     needs:
-      - lint
+      - check-lint
     runs-on: self-hosted
+    if: ${{ env.has_fail == 'true' }}
     steps:
       - name: Fix SQL Files and generate report
         run: |
