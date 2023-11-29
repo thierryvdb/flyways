@@ -28,10 +28,10 @@ jobs:
         run: |
           while IFS= read -r line; do
             if [[ $line =~ FAIL ]]; then
-              echo "has_fail=true" >> $GITHUB_ENV
+              echo "has_fail='true'" >> $GITHUB_ENV
               break
             else
-              echo "has_fail=false" >> $GITHUB_ENV
+              echo "has_fail='false'" >> $GITHUB_ENV
             fi
             done < lintReport.txt
 
