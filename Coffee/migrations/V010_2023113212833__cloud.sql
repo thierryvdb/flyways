@@ -1,3 +1,3 @@
 create table lol (
- valor int   
+    valor int
 )
