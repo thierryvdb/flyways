@@ -26,16 +26,18 @@ jobs:
     steps:
       - name: Checking for possible FAIL
         run: |
-          while IFS= read -r line; do
-            if [[ $line =~ FAIL ]]; then
-              echo "HAS_FAIL=true" >> $GITHUB_ENV
-              break
-            else
-              echo "HAS_FAIL=false" >> $GITHUB_ENV
-            fi
-            done < lintReport.txt
-          echo "HAS_FAIL=true" >> $GITHUB_ENV
+          FAILCOUNT=$(cat lintReport.txt | wc -l)
+          if [ $FAILCOUNT -gt 0]
+          then
+            echo "HAS_FAIL='true'" >> $GITHUB_ENV
+            echo "###############################"
+            echo "Listing Fails"
+            find  ${{ github.workspace }}/*/migrations -name 'V*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g'
+          else
+            echo "HAS_FAIL='false'"  >> $GITHUB_ENV
+          fi
 
+          
   fix:
     needs:
       - check-lint
