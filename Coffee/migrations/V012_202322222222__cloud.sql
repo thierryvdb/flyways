@@ -1,3 +1,3 @@
 create table automata(
-    name varchar(50);
-)
+    name varchar(50)
+);
