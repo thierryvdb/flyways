@@ -40,7 +40,7 @@ jobs:
     needs:
       - check-lint
     runs-on: self-hosted
-    if: ${{ github.env.HAS_FAIL == true }}
+    if: ${{ github.env.HAS_FAIL == 'true' }}
     steps:
       - name: Fix SQL Files and generate report
         run: |
