@@ -28,10 +28,10 @@ jobs:
         run: |
           while IFS= read -r line; do
           if [[ $line =~ FAIL ]]; then
-            echo "::set-env name=has_fail::true"
+          echo "has_fail=true" >> $GITHUB_ENV
             # I'll try to fix it now
           else
-            echo "::set-env name=has_fail::false"
+          echo "has_fail=false" >> $GITHUB_ENV
             # No failure found
           fi
           done < lintReport.txt
