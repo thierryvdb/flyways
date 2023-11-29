@@ -33,7 +33,7 @@ jobs:
 
   build:
     needs:
-      - lint
+      - fix
     name: Deploy Build - Development Database
     runs-on: self-hosted
     environment: 'build'
