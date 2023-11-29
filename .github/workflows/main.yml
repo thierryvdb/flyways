@@ -1,13 +1,5 @@
 name: Main
 
-#on:
-#  push:
-#    branches:
-#      - main
-#  pull_request:
-#    branches:
-#
-
 on: 
   workflow_dispatch:
 
@@ -25,8 +17,10 @@ jobs:
 
       - name: Lint SQL files and generate report
         run: |
-          find ${{ github.workspace }}/*/migrations -name '*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; >> lintReport.txt
-# Uncomment the following section if you want to include a "fix" job
+          #find ${{ github.workspace }}/*/migrations -name '*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; >> lintReport.txt
+          find  ${{ github.workspace }}/*/migrations -name 'V*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g' > lintReport.txt
+
+
   fix:
     needs:
       - lint
@@ -36,7 +30,6 @@ jobs:
         run: |
            find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql  --format=human --force \; >> lintFixReport.txt
 
-# Newly added build job - build should be the database that is going to get tested for the new added code
   build:
     needs:
       - lint
