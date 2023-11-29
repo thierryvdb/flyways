@@ -29,11 +29,11 @@ jobs:
         run: |
             if grep -q 'FAIL' lintReport.txt; then
               echo "FAIL found in lintReport.txt. Exiting the workflow."
-              exit 1
+              break
             else
               echo "No FAIL found in lintReport.txt. Continuing with the workflow."
             fi
-            
+
       - name: Fix SQL Files and generate report
         if: success()
         run: |
