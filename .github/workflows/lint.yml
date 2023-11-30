@@ -40,4 +40,4 @@ jobs:
            find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql --force \; >> lintFixReport.txt
 
       - name: Show me the outputs
-        run: echo "${{ toJson(github)}}"
+        run: echo "${{ toJson(env)}}"
