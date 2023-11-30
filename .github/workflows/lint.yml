@@ -1,8 +1,8 @@
 name: Lint
-on: 
+on:
   push:
     branches:
-        - main
+      - main
 
 env:
   FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
@@ -15,12 +15,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Lint SQL files
         run: |
-          #find ${{ github.workspace }}/*/migrations -name '*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; >> lintReport.txt
-          find  ${{ github.workspace }}/*/migrations -name 'V*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g' > lintReport.txt
-          
+          find ${{ github.workspace }}/*/migrations -name 'V*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g' > lintReport.txt
+
   fix:
     needs:
       - lint
@@ -29,19 +27,17 @@ jobs:
       - name: Check for FAIL
         id: check-4-fail
         run: |
-            if grep -q 'FAIL' lintReport.txt; then
-              echo "FAIL found in lintReport.txt. Exiting the workflow."
-              echo "HAS_FAIL=true" >> $GITHUB_OUTPUT
-            else
-              echo "No FAIL found in lintReport.txt. Continuing with the workflow."
-              echo "HAS_FAIL=false" >> $GITHUB_OUTPUT
-            fi
-
+          if grep -q 'FAIL' lintReport.txt; then
+            echo "FAIL found in lintReport.txt. Exiting the workflow."
+            echo "HAS_FAIL=true" >> $GITHUB_ENV
+          else
+            echo "No FAIL found in lintReport.txt. Continuing with the workflow."
+            echo "HAS_FAIL=false" >> $GITHUB_ENV
+          fi
       - name: Fix SQL Files and generate report
         if: success()
         run: |
-           find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql --force \; >> lintFixReport.txt
-
+          find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql --force \; >> lintFixReport.txt
       - name: Show me the outputs
         run: echo "${{ toJson(env)}}"
 
@@ -49,8 +45,8 @@ jobs:
     needs:
       - fix
     runs-on: self-hosted
+    env:
+      YESorNO: ${{ needs.fix.outputs.HAS_FAIL }}
     steps:
-      - name : Getting vars from previous job
-        env:
-          YESorNO: ${{ steps.check-4-fail.outputs.HAS_FAIL}}
-        run: echo "Did i Get it? $YESorNO"
+      - name: Getting vars from previous job
+        run: echo "Did I Get it? $YESorNO"
