@@ -27,6 +27,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Check for FAIL
+        id: check-4-fail
         run: |
             if grep -q 'FAIL' lintReport.txt; then
               echo "FAIL found in lintReport.txt. Exiting the workflow."
@@ -50,4 +51,6 @@ jobs:
     runs-on: self-hosted
     steps:
       - name : Getting vars from previous job
-        run: echo "${{ toJson(env)}}"
+        env:
+          YESorNO: ${{ steps.check-4-fail.outputs.HAS_FAIL}}
+        run: echo "Did i Get it? $YESorNO"
