@@ -31,10 +31,10 @@ jobs:
         run: |
             if grep -q 'FAIL' lintReport.txt; then
               echo "FAIL found in lintReport.txt. Exiting the workflow."
-              echo "HAS_FAIL=true" >> GITHUB_ENV
+              echo "HAS_FAIL=true" >> $GITHUB_OUTPUT
             else
               echo "No FAIL found in lintReport.txt. Continuing with the workflow."
-              echo "HAS_FAIL=false" >> GITHUB_ENV
+              echo "HAS_FAIL=false" >> $GITHUB_OUTPUT
             fi
 
       - name: Fix SQL Files and generate report
