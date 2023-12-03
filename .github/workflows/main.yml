@@ -97,18 +97,11 @@ jobs:
           eval sudo /usr/local/bin/flyway -user="${{ env.userName }}" -password="${{ env.password }}" -baselineOnMigrate="true"  -configFiles="${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/*/migrations" check -dryrun -changes -drift "-check.failOnDrift=${{ env.failReleaseIfDriftDetected }}" "-check.buildUrl=${{ env.JDBC }}" "-check.buildUser=${{ env.username }}" "-check.buildPassword=${{ env.password }}" -url="${{ env.JDBC }}"
         continue-on-error: true
 
-      # Create a directory to stage the artifact files
-      - name: Stage files for publishing
-        if: env.publishArtifacts == 'true'
-        run: |
-          mkdir -p Artifact_Files/Reports/ ${{ GITHUB.WORKSPACE }}/Coffee/reports
-          cp -R ${{ GITHUB.WORKSPACE }}/Coffee/reports Artifact_Files/Reports/
-
       - name: Publish Check Report as Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with: 
           name: flyway-reports
-          path: Artifact_Files/Reports/
+          path: repórt.html
 
 
 # step where if migration on in dev, will continue to here
