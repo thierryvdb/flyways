@@ -30,7 +30,7 @@ jobs:
             echo "HAS_FAIL=false" >> $GITHUB_ENV
           fi
       - name: Fix SQL Files and generate report
-        if: ${{ env.HAS_FAIL == 'true' }}
+        if: ${{ env.HAS_FAIL == 'false' }}
         run: |
           find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql --force \; >> lintFixReport.txt
 #      - name: Show me the outputs
