@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+    paths: '*/migrations/*.sql'
 
 env:
   FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
