@@ -1,4 +1,4 @@
-name: build
+name: Flyway
 on:
   push:
     branches:
