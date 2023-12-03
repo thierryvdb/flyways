@@ -171,4 +171,4 @@ jobs:
       - name: Migrate Build DB
         if: ${{ true }}
         run: |
-          eval sudo /usr/local/bin/flyway -user="${{ env.userName }}" -password="${{ env.password }}" -baselineOnMigrate="true" -configFiles="${{ GITHUB.WORKSPACE }}/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/*/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled='false'
+          eval sudo /usr/local/bin/flyway -user="${{ env.userName }}" -password="${{ env.password }}" -baselineOnMigrate="true" -configFiles="${{ GITHUB.WORKSPACE }}Coffee/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/*/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled='false'
