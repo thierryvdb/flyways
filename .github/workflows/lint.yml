@@ -14,7 +14,7 @@ jobs:
   lint:
     runs-on: self-hosted
     steps:
-      - name: Checkout code
+      - name: Checkout code1
         uses: actions/checkout@v4
       - name: Lint SQL files
         run: |
