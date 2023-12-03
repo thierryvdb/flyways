@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-    paths: '*/migrations/*.sql'
+    #paths: '*/migrations/*.sql'
 
 env:
   FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
@@ -19,12 +19,6 @@ jobs:
       - name: Lint SQL files
         run: |
           find ${{ github.workspace }}/*/migrations -name 'V*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g' > lintReport.txt
-
-  fix:
-    needs:
-      - lint
-    runs-on: self-hosted
-    steps:
       - name: Check for FAIL
         id: check-4-fail
         run: |
@@ -41,13 +35,3 @@ jobs:
           find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql --force \; >> lintFixReport.txt
       - name: Show me the outputs
         run: echo "${{ toJson(env)}}"
-
-  smile:
-    needs:
-      - fix
-    runs-on: self-hosted
-    env:
-      YESorNO: ${{ needs.fix.outputs.HAS_FAIL }}
-    steps:
-      - name: Getting vars from previous job
-        run: echo "Did I Get it? $YESorNO"
