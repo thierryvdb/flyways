@@ -87,7 +87,7 @@ jobs:
           cp -R ${{ GITHUB.WORKSPACE }}/Coffee/migrations Artifact_Files/Migration/
 
       - name: Publish Validated Migration Scripts as Artifact #if:: env.publishArtifacts == 'true'
-        uses: actions/upload-artifact@v3.1.1
+        uses: actions/upload-artifact@v3
         with:
           name: flyway-build-artifact
           path: Artifact_Files/Migration/
