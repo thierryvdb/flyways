@@ -89,12 +89,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
 #      - uses: actions/checkout@v3
         
-      # Runs the Flyway Check command, to produce a deployment report, against the Production database
+      # Runs the Flyway Check command, to produce a deployment report, against the Production database --- # "-check.reportFilename=${{ GITHUB.WORKSPACE }}/Coffee/reports/${{ env.databaseName }}-Run-${{ GITHUB.RUN_ID }}-Check-Report.html"
       - name: Create Check Reports
         if: env.generateDriftAndChangeReport == 'true'
         run: |
           mkdir -p ${{ GITHUB.WORKSPACE }}/Coffee/reports
-          eval sudo /usr/local/bin/flyway -user="${{ env.userName }}" -password="${{ env.password }}" -baselineOnMigrate="true"  -configFiles="${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/*/migrations" check -dryrun -changes -drift "-check.failOnDrift=${{ env.failReleaseIfDriftDetected }}" "-check.buildUrl=${{ env.JDBC }}" "-check.buildUser=${{ env.username }}" "-check.buildPassword=${{ env.password }}" -url="${{ env.JDBC }}" "-check.reportFilename=${{ GITHUB.WORKSPACE }}/Coffee/reports/${{ env.databaseName }}-Run-${{ GITHUB.RUN_ID }}-Check-Report.html"
+          eval sudo /usr/local/bin/flyway -user="${{ env.userName }}" -password="${{ env.password }}" -baselineOnMigrate="true"  -configFiles="${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/*/migrations" check -dryrun -changes -drift "-check.failOnDrift=${{ env.failReleaseIfDriftDetected }}" "-check.buildUrl=${{ env.JDBC }}" "-check.buildUser=${{ env.username }}" "-check.buildPassword=${{ env.password }}" -url="${{ env.JDBC }}"
         continue-on-error: true
 
       # Create a directory to stage the artifact files
