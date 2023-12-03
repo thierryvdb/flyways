@@ -1,6 +1,8 @@
 name: build
 on:
-  push
+  push:
+    branches:
+    - main
 #  workflow_run:
 #    workflows: ["Lint"]
 #    types:
