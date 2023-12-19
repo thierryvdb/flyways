@@ -2,8 +2,7 @@ name: Flyway
 on:
   push:
     branches:
-    - main
-
+      - main
 
 env:
   FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
@@ -11,55 +10,42 @@ env:
   ACTIONS_RUNNER_DEBUG: true
 
 jobs:
-  
   lint:
+    name: lint
     runs-on: self-hosted
-    outputs:
-      has_fail: ${{ steps.check4fail.outputs.HAS_FAIL}}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Lint SQL files
-        run: |
-          find ${{ github.workspace }}/*/migrations -name 'V*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g' > lintReport.txt
-      - name: Check for FAIL
-        id: check4fail
-        run: |
-          if grep -q 'FAIL' lintReport.txt; then
-            echo "FAIL found in lintReport.txt."
-            echo "HAS_FAIL=true" >> $GITHUB_OUTPUT
-          else
-            echo "No FAIL found in lintReport.txt"
-            echo "HAS_FAIL=false" >> $GITHUB_OUTPUT
-          fi
-      - name: Fix SQL Files and generate report
-        if: ${{ steps.check4fail.outputs.HAS_FAIL == 'true' }}
-        run: |
-          find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql --force \; >> lintFixReport.txt
-      - name: Uploading fixed sql files and report
-        uses: actions/upload-artifact@v3
+      - uses: actions/checkout@v2
+      - uses: yu-iskw/action-sqlfluff@v3
+        id: lint-sql
         with:
-          name: Fixed-Migrations & Lint Fix Report
-          path: |
-            ${{ github.workspace}}/*/migrations
-            lintFixReport.txt
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          sqlfluff_version: "2.0.7"
+          sqlfluff_command: "fix" # Or "lint"
+          config: "${{ github.workspace }}/.sqlfluff"
+          paths: "${{ github.workspace }}/Coffee/migrations"
+      - name: "Show outputs (Optional)"
+        shell: bash
+        run: |
+          echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
+          echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}' | jq -r '.'
+
 
   build:
     needs: lint
     name: Deploy Build - Development Database
     runs-on: self-hosted
-    environment: 'build'
+    environment: "build"
     env:
-      stage: 'Build'
+      stage: "Build"
       databaseName: ${{ secrets.databaseName }}
       JDBC: ${{ secrets.JDBC }}
       userName: ${{ secrets.userName }}
       password: ${{ secrets.password }}
-      displayName: 'Build'
+      displayName: "Build"
       executeBuild: true
       publishArtifacts: true
     steps:
-
       - name: Create Flyway Command Variable
         if: ${{ true }}
         run: |
@@ -88,17 +74,17 @@ jobs:
           name: flyway-build-artifact
           path: Artifact_Files/Migration/
 
-# Build is ok, going to change report production
+  # Build is ok, going to change report production
 
   prod-preparation:
     name: Production Deployment Preparation - Report Creation
     # The type of runner that the job will run on
     runs-on: self-hosted
-    environment: 'prod' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured
+    environment: "prod" #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured
     if: ${{ true }} #Set this variable to false to temporarily disable the job
     needs: build
     env:
-      stage: 'Prod'
+      stage: "Prod"
       # Environment Secrets - Ensure all of the below have been created as an Environment Secret (Projects Settings > Secrects > Actions section, specially related to the environment in question) #
       databaseName: ${{ secrets.databaseName}}
       JDBC: ${{ secrets.JDBC }}
@@ -116,31 +102,30 @@ jobs:
         if: ${{ true }}
         run: |
           echo "FLYWAY_COMMAND='sudo /usr/local/bin/flyway -user=${{ env.userName }} -password=${{ env.password }}  -configFiles=${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml -locations=filesystem:${{ GITHUB.WORKSPACE }}/Coffee/migrations -baselineOnMigrate=true'" >> $GITHUB_ENV
-        continue-on-error: true     
+        continue-on-error: true
       # Runs the Flyway Check command, to produce a deployment report, against the Production database --- # "-check.reportFilename=${{ GITHUB.WORKSPACE }}/Coffee/reports/${{ env.databaseName }}-Run-${{ GITHUB.RUN_ID }}-Check-Report.html"
       - name: Create Check Reports
         if: env.generateDriftAndChangeReport == 'true'
         run: |
           eval sudo /usr/local/bin/flyway -user="${{ env.userName }}" -password="${{ env.password }}" -baselineOnMigrate="true"  -configFiles="${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/*/migrations" check -dryrun "-check.failOnDrift=${{ env.failReleaseIfDriftDetected }}" "-check.buildUrl=${{ env.JDBC }}" "-check.buildUser=${{ env.username }}" "-check.buildPassword=${{ env.password }}" -url="${{ env.JDBC }}"
         continue-on-error: true
-#eval sudo /usr/local/bin/flyway -user="${{ env.userName }}" -password="${{ env.password }}" -baselineOnMigrate="true"  -configFiles="${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/*/migrations" check -dryrun -changes -drift "-check.failOnDrift=${{ env.failReleaseIfDriftDetected }}" "-check.buildUrl=${{ env.JDBC }}" "-check.buildUser=${{ env.username }}" "-check.buildPassword=${{ env.password }}" -url="${{ env.JDBC }}"
+      #eval sudo /usr/local/bin/flyway -user="${{ env.userName }}" -password="${{ env.password }}" -baselineOnMigrate="true"  -configFiles="${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/*/migrations" check -dryrun -changes -drift "-check.failOnDrift=${{ env.failReleaseIfDriftDetected }}" "-check.buildUrl=${{ env.JDBC }}" "-check.buildUser=${{ env.username }}" "-check.buildPassword=${{ env.password }}" -url="${{ env.JDBC }}"
       - name: Publish Check Report as Artifact
         uses: actions/upload-artifact@v3
-        with: 
+        with:
           name: flyway-reports
           path: report.html
 
-
-# step where if migration on in dev, will continue to here
+  # step where if migration on in dev, will continue to here
 
   prod:
     name: Deploy Production - Migration
     runs-on: self-hosted
-    environment: 'prod' #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured 
+    environment: "prod" #Ensure this environment name is setup in the projects Settings>Environment area. Ensuring any reviewers are also configured
     if: ${{ true }} #Set this variable to false to temporarily disable the job
     needs: prod-preparation
     env:
-      stage: 'Prod'
+      stage: "Prod"
       databaseName: ${{ secrets.databaseName}}
       JDBC: ${{ secrets.JDBC }}
       userName: ${{ secrets.userName }}
@@ -153,7 +138,7 @@ jobs:
         run: |
           echo "FLYWAY_COMMAND='sudo /usr/local/bin/flyway -user=${{ env.userName }} -password=${{ env.password }}  -configFiles=${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml -locations=filesystem:${{ GITHUB.WORKSPACE }}/Coffee/migrations -baselineOnMigrate=true'" >> $GITHUB_ENV
         continue-on-error: true
-        
+
       # Runs the Flyway Migrate against the Production database
       - name: Migrate Build DB
         if: ${{ true }}
