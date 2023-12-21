@@ -45,7 +45,7 @@ jobs:
         if: ${{ steps.check4fail.outputs.HAS_FAIL == 'true' }}
         uses: dorny/test-reporter@v1
         with:
-          reporter: "cobertura"
+          reporter: "lcov"
           name: Generate
           path: lintFixReport.txt
           path-replace-backslashes: false
