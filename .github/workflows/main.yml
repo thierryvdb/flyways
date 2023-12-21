@@ -45,8 +45,16 @@ jobs:
         if: ${{ steps.check4fail.outputs.HAS_FAIL == 'true' }}
         uses: dorny/test-reporter@v1
         with:
+          reporter: "cobertura"
           name: Generate
           path: lintFixReport.txt
+          path-replace-backslashes: false
+          list-suites: all
+          list-tests: all
+          max-annotations: 10
+          fail-on-error: true
+          fail-on-empty: true
+          only-summary: false
 
   build:
     needs: lint
