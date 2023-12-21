@@ -22,12 +22,14 @@ jobs:
           echo "GITHUB_PULL_REQUEST_BASE_REF=main" >> $GITHUB_ENV
 
       - uses: yu-iskw/action-sqlfluff@v3.7.0
+        id: lint-sql
         with:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
           sqlfluff_version: '1.4.5'
           sqlfluff_command: 'fix'
-          paths: '${{ github.workspace }}/Coffee/migrations'
+          config: "${{ github.workspace }}/.sqlfluff"
+          paths: '${{ github.workspace }}/models'
       - name: Show outputs
         shell: bash
         run: |
