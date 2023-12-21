@@ -1,8 +1,11 @@
 name: Flyway
+#on:
+#  push:
+#    branches:
+#      - main
+
 on:
-  push:
-    branches:
-      - main
+  pull_request:
 
 env:
   FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
@@ -20,6 +23,14 @@ jobs:
       - name: Set GITHUB_PULL_REQUEST_BASE_REF
         run: |
           echo "GITHUB_PULL_REQUEST_BASE_REF=main" >> $GITHUB_ENV
+
+      - uses: khan/pull-request-comment-trigger@master
+        id: check
+        with:
+          trigger: '/lint'
+          reaction: rocket
+        env:
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
 
       - uses: yu-iskw/action-sqlfluff@v3.7.0
         id: lint-sql
