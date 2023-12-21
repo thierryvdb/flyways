@@ -17,44 +17,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Lint SQL files
-        run: |
-          find ${{ github.workspace }}/*/migrations -name 'V*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g' > lintReport.txt
-      - name: Check for FAIL
-        id: check4fail
-        run: |
-          if grep -q 'FAIL' lintReport.txt; then
-            echo "FAIL found in lintReport.txt."
-            echo "HAS_FAIL=true" >> $GITHUB_OUTPUT
-          else
-            echo "No FAIL found in lintReport.txt"
-            echo "HAS_FAIL=false" >> $GITHUB_OUTPUT
-          fi
-      - name: Fix SQL Files and generate report
-        if: ${{ steps.check4fail.outputs.HAS_FAIL == 'true' }}
-        run: |
-          find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql --force \; >> lintFixReport.txt
-      - name: Uploading fixed sql files and report
-        uses: actions/upload-artifact@v3
+
+      - uses: yu-iskw/action-sqlfluff@v3.7.0
         with:
-          name: Fixed-Migrations & Lint Fix Report
-          path: |
-            ${{ github.workspace}}/*/migrations
-            lintFixReport.txt
-      - name: Upload Test Report
-        if: ${{ steps.check4fail.outputs.HAS_FAIL == 'true' }}
-        uses: dorny/test-reporter@v1
-        with:
-          reporter: "lcov"
-          name: Generate
-          path: lintFixReport.txt
-          path-replace-backslashes: false
-          list-suites: all
-          list-tests: all
-          max-annotations: 10
-          fail-on-error: true
-          fail-on-empty: true
-          only-summary: false
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          sqlfluff_version: '1.4.5'
+          sqlfluff_command: 'fix'
+          paths: '${{ github.workspace }}/Coffee/migrations'
+      - name: Show outputs
+        shell: bash
+        run: |
+          echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
+          echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}' | jq -r '.'
 
   build:
     needs: lint
