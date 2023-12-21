@@ -11,25 +11,43 @@ env:
 
 jobs:
   lint:
-    name: lint
     runs-on: self-hosted
+    outputs:
+      has_fail: ${{ steps.check4fail.outputs.HAS_FAIL}}
     steps:
-      - uses: actions/checkout@v2
-      - uses: yu-iskw/action-sqlfluff@v3
-        id: lint-sql
-        with:
-          github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
-          sqlfluff_version: "2.0.7"
-          sqlfluff_command: "fix" # Or "lint"
-          config: "${{ github.workspace }}/.sqlfluff"
-          paths: "${{ github.workspace }}/Coffee/migrations"
-      - name: "Show outputs (Optional)"
-        shell: bash
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Lint SQL files
         run: |
-          echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
-          echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}' | jq -r '.'
-
+          find ${{ github.workspace }}/*/migrations -name 'V*.sql' -exec sqlfluff lint {} --dialect mysql --format=human \; | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g' > lintReport.txt
+      - name: Check for FAIL
+        id: check4fail
+        run: |
+          if grep -q 'FAIL' lintReport.txt; then
+            echo "FAIL found in lintReport.txt."
+            echo "HAS_FAIL=true" >> $GITHUB_OUTPUT
+          else
+            echo "No FAIL found in lintReport.txt"
+            echo "HAS_FAIL=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Fix SQL Files and generate report
+        if: ${{ steps.check4fail.outputs.HAS_FAIL == 'true' }}
+        run: |
+          find ${{ github.workspace}}/*/migrations -name '*.sql' -exec sqlfluff fix {} --dialect mysql --force \; >> lintFixReport.txt
+      - name: Uploading fixed sql files and report
+        uses: actions/upload-artifact@v3
+        with:
+          name: Fixed-Migrations & Lint Fix Report
+          path: |
+            ${{ github.workspace}}/*/migrations
+            lintFixReport.txt
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: JEST Tests            # Name of the check run which will be created
+          path: reports/jest-*.xml    # Path to test results
+          reporter: jest-junit        # Format of test results
 
   build:
     needs: lint
