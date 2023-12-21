@@ -17,6 +17,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Set GITHUB_PULL_REQUEST_BASE_REF
+        run: |
+          echo "GITHUB_PULL_REQUEST_BASE_REF=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
 
       - uses: yu-iskw/action-sqlfluff@v3.7.0
         with:
