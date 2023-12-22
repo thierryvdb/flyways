@@ -1,0 +1,34 @@
+name: LintOutPut
+on:
+    workflow_dispatch:
+#    pull_request:
+
+env:
+  FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
+  FIRST_UNDO_SCRIPT: ${{ secrets.FIRST_UNDO_SCRIPT }}
+  ACTIONS_RUNNER_DEBUG: true
+
+jobs:
+  lint:
+    runs-on: self-hosted
+    steps:
+    - name: Install sql-lint
+      run: sudo npm install -g sql-lint
+      if: success()
+
+    - name: SQLLint
+      run: |
+            SQL_FILES=$(git diff --name-only ${{ github.sha }}^ ${{ github.sha }} | grep -E '\.sql$')
+            if [ -n "$SQL_FILES" ]; then
+                echo "Linting SQL files: $SQL_FILES"
+                for FILE in $SQL_FILES; do
+                sql-lint "$FILE"
+                done
+            else
+                echo "No SQL files found in this commit."
+            fi
+
+        
+
+
+      
