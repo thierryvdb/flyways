@@ -13,7 +13,11 @@ jobs:
     runs-on: self-hosted
     steps:
     - name: Install sql-lint
+<<<<<<< HEAD
       run: sudo npm install -g sql-lint
+=======
+      run: npm install -g sql-lint
+>>>>>>> a06ac29569ed00589a9ececca49a473e8e5eabbe
       if: success()
 
     - name: SQLLint
