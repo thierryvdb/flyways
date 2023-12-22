@@ -12,7 +12,7 @@ jobs:
   lint:
     runs-on: self-hosted
     steps:
-    - name: Install sql-lint
+    - name: Install sql-lintd
       run: npm install -g sql-lint
       if: success()
 
