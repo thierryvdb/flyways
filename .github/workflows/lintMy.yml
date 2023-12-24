@@ -1,27 +1,30 @@
-name: SQL Linting
-on: [pull_request]
+name: SQLFluff Reviewdog
+
+on:
+  pull_request:
+    paths:
+      - 'Coffee/migrations/**.sql'
 
 jobs:
-  lint_sql:
-    runs-on: ubuntu-latest
+  lint:
+    runs-on: self-hosted
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
-      - name: Set up SQLFluff
-        uses: setup-sqlfluff@v3
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          sqlfluff_command: "lint"
-          sqlfluff_path: "${{ github.workspace }}/Coffee/migrations"
+          python-version: 3.8
 
-      - name: Run SQLFluff
+      - name: Install dependencies
         run: |
-          echo "##vso[task.setvariable variable=sqlfluffResults;isOutput=true]"
-          sqlfluff_command: "lint"
-          sqlfluff_path: "${{ github.workspace }}/Coffee/migrations"
+          python -m pip install --upgrade pip
+          pip install sqlfluff
+          pip install reviewdog
 
-      - name: Generate report
+      - name: Lint SQL files
         run: |
-          echo "##vso[task.setvariable variable=sqlfluffResults;isOutput=true]"
-          sqlfluff_command: "lint"
-          sqlfluff_path: "${{ github.workspace }}/Coffee/migrations"
+          sqlfluff lint --dialect mysql ${{ github.workspace }}/Coffee/migrations/**.sql \
+            | reviewdog -efm="%f:%l:%c: %m" -name=sqlfluff -reporter=github-pr-check
