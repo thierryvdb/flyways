@@ -1,0 +1,40 @@
+name: Lint
+on:
+  pull_request:
+    # paths: '*/migrations/*.sql'  # Uncomment and adjust if necessary
+
+env:
+  FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
+  FIRST_UNDO_SCRIPT: ${{ secrets.FIRST_UNDO_SCRIPT }}
+  ACTIONS_RUNNER_DEBUG: true
+
+jobs:
+  lint:
+    runs-on: self-hosted
+    outputs:
+      has_fail: ${{ steps.check4fail.outputs.HAS_FAIL }}
+      changed_files: ${{ steps.changed-files.outputs.HAS_CHANGED }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Identify changed files
+        id: changed-files
+        run: |
+          changed_files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '\.sql$' || true)
+          echo "HAS_CHANGED=${changed_files}" >> $GITHUB_ENV
+
+      - name: Lint SQL files
+        run: |
+          sqlfluff lint ${{ env.HAS_CHANGED }} --dialect mysql --format=human | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g' > lintReport.txt
+
+      - name: Check for FAIL
+        id: check4fail
+        run: |
+          if grep -q 'FAIL' lintReport.txt; then
+            echo "FAIL found in lintReport.txt."
+            echo "HAS_FAIL=true" >> $GITHUB_ENV
+          else
+            echo "No FAIL found in lintReport.txt."
+            echo "HAS_FAIL=false" >> $GITHUB_ENV
+          fi
