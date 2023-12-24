@@ -2,8 +2,8 @@ name: SQLFluff Reviewdog
 
 on:
   pull_request:
-    paths:
-      - 'Coffee/migrations/**.sql'
+    #paths:
+      #- 'Coffee/migrations/**.sql'
 
 jobs:
   lint:
