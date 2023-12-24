@@ -1,0 +1,21 @@
+name: Lint Check with ReviewDog
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  lint-check:
+    name: Lint Check
+    runs-on: self-hosted
+    steps:
+      - name: 📦 Checkout project repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
+      - name: 📦 Install Reviewdog
+        if: github.event_name == 'pull_request'
+        uses: reviewdog/action-setup@v1
