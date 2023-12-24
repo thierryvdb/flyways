@@ -25,7 +25,7 @@ jobs:
 
       - name: Lint SQL files
         run: |
-          sqlfluff lint ${{ steps.changed_files.outputs.HAS_CHANGED}} --dialect mysql --format=human \; | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g' > lintReport.txt
+          sqlfluff lint ${{ steps.changed-files.outputs.HAS_CHANGED}} --dialect mysql --format=human \; | grep "==" | awk '{ print $2" "$3 }' | sed 's/\[//g' | sed 's/\]//g' > lintReport.txt
       - name: Check for FAIL
         id: check4fail
         run: |
@@ -36,4 +36,3 @@ jobs:
             echo "No FAIL found in lintReport.txt"
             echo "HAS_FAIL=false" >> $GITHUB_OUTPUT
           fi
-
