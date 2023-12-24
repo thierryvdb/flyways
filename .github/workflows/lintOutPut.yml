@@ -12,10 +12,6 @@ jobs:
   lint:
     runs-on: self-hosted
     steps:
-    - name: Install sql-lint
-      run: sudo npm install -g sql-lint
-      if: success()
-
     - name: SQLLint
       run: |
             SQL_FILES=$(git diff --name-only ${{ github.sha }}^ ${{ github.sha }} | grep -E '\.sql$')
