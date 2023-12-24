@@ -30,3 +30,8 @@ jobs:
           dialect: mysql
           #config: "${{ github.workspace }}/.sqlfluff"
           paths: '${{ github.workspace }}/Coffee/migrations'
+      - name: 'Show outputs (Optional)'
+        shell: bash
+        run: |
+            echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
+            echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}' | jq -r '.'
