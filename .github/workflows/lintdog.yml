@@ -19,3 +19,13 @@ jobs:
       - name: 📦 Install Reviewdog
         if: github.event_name == 'pull_request'
         uses: reviewdog/action-setup@v1
+
+
+      - uses: yu-iskw/action-sqlfluff@v2
+        id: lint-sql
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          sqlfluff_version: "0.9.0"
+          config: "${{ github.workspace }}/.sqlfluff"
+          paths: '${{ github.workspace }}/migrations/*'
