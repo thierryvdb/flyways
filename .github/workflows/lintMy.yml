@@ -1,0 +1,27 @@
+name: SQL Linting
+on: [pull_request]
+
+jobs:
+  lint_sql:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+
+      - name: Set up SQLFluff
+        uses: setup-sqlfluff@v3
+        with:
+          sqlfluff_command: "lint"
+          sqlfluff_path: "${{ github.workspace }}/Coffee/migrations"
+
+      - name: Run SQLFluff
+        run: |
+          echo "##vso[task.setvariable variable=sqlfluffResults;isOutput=true]"
+          sqlfluff_command: "lint"
+          sqlfluff_path: "${{ github.workspace }}/Coffee/migrations"
+
+      - name: Generate report
+        run: |
+          echo "##vso[task.setvariable variable=sqlfluffResults;isOutput=true]"
+          sqlfluff_command: "lint"
+          sqlfluff_path: "${{ github.workspace }}/Coffee/migrations"
