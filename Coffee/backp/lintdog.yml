@@ -1,0 +1,37 @@
+name: Lint Check with ReviewDog
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  lint-check:
+    name: Lint Check
+    runs-on: self-hosted
+    steps:
+      - name: 📦 Checkout project repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
+      - name: 📦 Install Reviewdog
+        if: github.event_name == 'pull_request'
+        uses: reviewdog/action-setup@v1
+
+
+      - uses: yu-iskw/action-sqlfluff@v2
+        id: lint-sql
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          sqlfluff_version: "2.0.7"
+          dialect: mysql
+          #config: "${{ github.workspace }}/.sqlfluff"
+          paths: '${{ github.workspace }}/Coffee/migrations'
+      - name: 'Show outputs (Optional)'
+        shell: bash
+        run: |
+            echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
+            echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}' | jq -r '.'
