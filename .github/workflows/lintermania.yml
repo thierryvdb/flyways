@@ -10,7 +10,7 @@ env:
 
 jobs:
   lint:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     outputs:
       has_fail: ${{ steps.check4fail.outputs.HAS_FAIL }}
       changed_files: ${{ steps.changed-files.outputs.HAS_CHANGED }}
