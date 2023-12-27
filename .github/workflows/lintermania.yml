@@ -10,10 +10,8 @@ env:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
-    outputs:
-      has_fail: ${{ steps.check4fail.outputs.HAS_FAIL }}
-      changed_files: ${{ steps.changed-files.outputs.HAS_CHANGED }}
+    runs-on: self-hosted
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
