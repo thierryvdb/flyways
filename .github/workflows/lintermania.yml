@@ -19,4 +19,12 @@ jobs:
       - name: Super-linter
         uses: super-linter/super-linter@v5.7.2  # x-release-please-version
         env:
+          RUN_LOCAL: true
+          DEFAULT_WORKSPACE: "${{ github.workspace }}"
+          LINTER_RULES_PATH: "/tmp/linter_rules"
+          VALIDATE_ALL_CODEBASE: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Super Linter for MySQL SQL files
+        run: |
+          docker exec -e RUN_LOCAL=true -e DEFAULT_WORKSPACE="${{ github.workspace }}" -e LINTER_RULES_PATH=/tmp/linter_rules githubsuperlinter --only changed --linter mysql
