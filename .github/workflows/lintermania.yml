@@ -1,7 +1,7 @@
 name: Lint
 on:
   pull_request:
-    # paths: '*/migrations/*.sql'  # Uncomment and adjust if necessary
+    ## paths: '*/migrations/*.sql'  # Uncomment and adjust if necessary
 
 env:
   FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
@@ -23,9 +23,10 @@ jobs:
           DEFAULT_WORKSPACE: "${{ github.workspace }}"
           LINTER_RULES_PATH: "/tmp/linter_rules"
           VALIDATE_ALL_CODEBASE: false
+          VALIDATE_SQL: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_CODEBASE_PATH: "*/migrations/"
 
-      - name: Run Super Linter for MySQL SQL files
-        run: |
-          docker exec -e RUN_LOCAL=true -e DEFAULT_WORKSPACE="${{ github.workspace }}" -e LINTER_RULES_PATH=/tmp/linter_rules githubsuperlinter --only changed --linter mysql
+      #- name: Run Super Linter for MySQL SQL files
+        #run: |
+          #docker exec -e RUN_LOCAL=true -e DEFAULT_WORKSPACE="${{ github.workspace }}" -e LINTER_RULES_PATH=/tmp/linter_rules githubsuperlinter --only changed --linter mysql
