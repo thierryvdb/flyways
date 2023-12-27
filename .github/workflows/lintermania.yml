@@ -1,7 +1,7 @@
 name: Lint
 on:
   pull_request:
-     paths: '*/migrations/*.sql'  # Uncomment and adjust if necessary
+    # paths: '*/migrations/*.sql'  # Uncomment and adjust if necessary
 
 env:
   FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
