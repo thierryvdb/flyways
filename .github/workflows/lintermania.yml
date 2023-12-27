@@ -23,6 +23,7 @@ jobs:
           DEFAULT_WORKSPACE: "${{ github.workspace }}"
           LINTER_RULES_PATH: "/tmp/linter_rules"
           VALIDATE_ALL_CODEBASE: false
+          VALIDATE_SQL: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VALIDATE_CODEBASE_PATH: "*/migrations/"
 
