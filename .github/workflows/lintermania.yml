@@ -24,6 +24,7 @@ jobs:
           LINTER_RULES_PATH: "/tmp/linter_rules"
           VALIDATE_ALL_CODEBASE: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_CODEBASE_PATH: "*/migrations/"
 
       - name: Run Super Linter for MySQL SQL files
         run: |
