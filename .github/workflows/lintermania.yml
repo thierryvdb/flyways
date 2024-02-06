@@ -1,7 +1,8 @@
 name: Lint
 on:
   push:
-    branches: dev
+    branches: 
+      - dev
 
 env:
   FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
