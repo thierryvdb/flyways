@@ -5,7 +5,7 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   test-check:
     name: runner / sqlfluff (github-check)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
       - uses: yu-iskw/action-sqlfluff@v3
