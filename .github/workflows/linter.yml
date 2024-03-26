@@ -6,7 +6,7 @@ jobs:
     name: runner / sqlfluff (github-check)
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: yu-iskw/action-sqlfluff@v3
         id: lint-sql
         with:
