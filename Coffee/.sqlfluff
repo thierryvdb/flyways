@@ -10,12 +10,12 @@ indented_using_on = True
 template_blocks_indent = False
 
 [sqlfluff:templater:dbt]
-project_dir = ./migrations
+project_dir = Coffee/migrations
 unwrap_wrapped_queries = True
 
 [sqlfluff:templater:jinja]
 apply_dbt_builtins = True
-project_dir = ./migrations
+project_dir = Coffee/migrations
 
 [sqlfluff:rules]
 allow_scalar = True
