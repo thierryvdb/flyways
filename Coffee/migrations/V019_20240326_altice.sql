@@ -1,3 +1,3 @@
-creata table irony(
+creata table ironys(
 id int 
 );
