@@ -1,14 +1,22 @@
 [sqlfluff]
 templater = jinja
 sql_file_exts = .sql,.sql.j2,.dml,.ddl
+processes = -1
 
 [sqlfluff:indentation]
 indented_joins = False
 indented_using_on = True
 template_blocks_indent = False
 
-[sqlfluff:templater]
+[sqlfluff:templater:dbt]
+project_dir = ./migrations
 unwrap_wrapped_queries = True
 
 [sqlfluff:templater:jinja]
 apply_dbt_builtins = True
+project_dir = ./migrations
+
+[sqlfluff:rules]
+allow_scalar = True
+single_table_references = consistent
+unquoted_identifiers_policy = all
