@@ -1,6 +1,7 @@
 name: sqlfluff with reviewdog
-on:
-  pull_request:
+on:  # yamllint disable-line rule:truthy
+    push: null
+    pull_request: null
 jobs:
   test-check:
     name: runner / sqlfluff (github-check)
