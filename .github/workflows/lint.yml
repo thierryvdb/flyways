@@ -15,4 +15,4 @@ jobs:
       - name: Install SQLFluff
         run: "pip install sqlfluff==3.0.3"
       - name: Lint models
-        run: "sqlfluff lint migrations"
+        run: "sqlfluff lint models"
