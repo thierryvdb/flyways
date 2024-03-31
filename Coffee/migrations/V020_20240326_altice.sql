@@ -12,5 +12,6 @@ CREATE TABLE teachers (
     pot int,
     putts int,
     putss int,
-    news int
+    news int,
+    ints int
 );
