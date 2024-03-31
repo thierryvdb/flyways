@@ -18,7 +18,7 @@ jobs:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
           sqlfluff_version: "3.0.3"
-          sqlfluff_command: "lint"
+          sqlfluff_command: "fix"
           config: "Coffee/.sqlfluff"
           paths: 'Coffee/migrations'
           fail_on_error: true

@@ -7,5 +7,6 @@ CREATE TABLE teachers (
     valid float,
     idade varchar(50),
     front int ,
-    harp int
+    harp int,
+    haap int
 );
