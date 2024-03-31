@@ -6,5 +6,6 @@ CREATE TABLE teachers (
     hire_date DATE,
     valid float,
     idade varchar(50),
-    front int 
+    front int ,
+    harp int
 );
