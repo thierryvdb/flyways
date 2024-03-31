@@ -23,6 +23,7 @@ jobs:
           paths: 'Coffee/migrations'
           fail_on_error: true
 
+
       - name: 'Check for warnings'
         shell: bash
         run: |
@@ -35,8 +36,7 @@ jobs:
       - name: 'Show outputs (Optional)'
         shell: bash
         run: |
-            echo '${{ steps.lint-sql.outputs.sqlfluff-results }}'
-            echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}'
+            echo '${{ steps.lint-sql.outputs.reviewdog-exit-code }}'
             
       - name: Print lint-sql outputs
         run: echo "${{ toJson(steps.lint-sql.outputs) }}"
