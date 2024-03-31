@@ -4,5 +4,6 @@ CREATE TABLE teachers (
     last_name VARCHAR(50) NOT NULL,
     subject VARCHAR(100),
     hire_date DATE,
-    valid float
+    valid float,
+    idade varchar(50)
 );
