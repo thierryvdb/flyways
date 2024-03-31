@@ -37,5 +37,12 @@ jobs:
         run: |
             echo '${{ steps.lint-sql.outputs.sqlfluff-results }}'
             echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}'
-          #echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
+            
+      - name: Print lint-sql outputs
+        run: echo "${{ toJson(steps.lint-sql.outputs) }}"
+
+      - name: Print raw lint-sql output
+        run: echo "${{ steps.lint-sql.result }}"
+      
+        #echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
           #echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}' | jq -r '.'
