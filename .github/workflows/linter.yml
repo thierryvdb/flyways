@@ -18,7 +18,7 @@ jobs:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
           sqlfluff_version: "3.0.3"
-          sqlfluff_command: "fix"
+          sqlfluff_command: "lint"
           config: "Coffee/.sqlfluff"
           paths: 'Coffee/migrations'
           fail_on_error: true
@@ -35,5 +35,7 @@ jobs:
       - name: 'Show outputs (Optional)'
         shell: bash
         run: |
-          echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
-          echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}' | jq -r '.'
+            echo '${{ steps.lint-sql.outputs.sqlfluff-results }}'
+            echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}'
+          #echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
+          #echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}' | jq -r '.'

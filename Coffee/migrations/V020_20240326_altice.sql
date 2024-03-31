@@ -8,5 +8,6 @@ CREATE TABLE teachers (
     idade varchar(50),
     front int ,
     harp int,
-    haap int
+    haap int,
+    pot int
 );
