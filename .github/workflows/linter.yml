@@ -23,6 +23,9 @@ jobs:
           paths: 'Coffee/migrations'
           level: warning
 
+      - name: Adding markdown
+        run: echo '### Hello world! 🚀' >> $GITHUB_STEP_SUMMARY
+
 
       - name: 'Check for warnings'
         shell: bash
@@ -46,3 +49,5 @@ jobs:
       
         #echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
           #echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}' | jq -r '.'
+
+
