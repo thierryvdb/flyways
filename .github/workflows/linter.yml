@@ -16,38 +16,9 @@ jobs:
         id: lint-sql
         with:
           github_token: ${{ secrets.github_token }}
-          reporter: github-check
+          #reporter: github-check
           sqlfluff_version: "3.0.3"
           sqlfluff_command: "lint"
           config: "Coffee/.sqlfluff"
           paths: 'Coffee/migrations'
           level: warning
-
-      - name: Adding markdown
-        run: echo '### Hello world! 🚀' >> $GITHUB_STEP_SUMMARY
-
-
-      - name: 'Check for warnings'
-        shell: bash
-        run: |
-          warnings=$(echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.violations[]? | select(.severity == "WARNING") | .line_no')
-          if [ -n "$warnings" ]; then
-            echo "::error ::Warnings found during SQL linting on lines: $warnings"
-            exit 1
-          fi
-
-      - name: 'Show outputs (Optional)'
-        shell: bash
-        run: |
-            echo '${{ steps.lint-sql.outputs.reviewdog-exit-code }}'
-            
-      - name: Print lint-sql outputs
-        run: echo "${{ toJson(steps.lint-sql.outputs) }}"
-
-      - name: Print raw lint-sql output
-        run: echo "${{ steps.lint-sql.result }}"
-      
-        #echo '${{ steps.lint-sql.outputs.sqlfluff-results }}' | jq -r '.'
-          #echo '${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}' | jq -r '.'
-
-

@@ -10,5 +10,6 @@ CREATE TABLE teachers (
     harp int,
     haap int,
     pot int,
-    putts int
+    putts int,
+    putss int
 );
