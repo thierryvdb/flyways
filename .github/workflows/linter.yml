@@ -5,8 +5,8 @@ on:
 
 jobs:
 
-  test-check:
-    name: runner / sqlfluff (github-check)
+  lint-check:
+    name: sqlfluff (github-check)
     runs-on: self-hosted
 
     steps:
@@ -16,12 +16,12 @@ jobs:
         id: lint-sql
         with:
           github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
+          reporter: github-check
           sqlfluff_version: "3.0.3"
           sqlfluff_command: "lint"
           config: "Coffee/.sqlfluff"
           paths: 'Coffee/migrations'
-          fail_on_error: true
+          level: warning
 
 
       - name: 'Check for warnings'
