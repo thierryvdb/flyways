@@ -13,11 +13,11 @@ jobs:
           github_token: ${{ secrets.github_token }}
           reporter: github-pr-review
           sqlfluff_version: "3.0.3"
-          #sqlfluff_command: "lint" # Or "lint"
-          sqlfluff_command: "python warning_as_error_reporter.py {config} {paths}"
+          sqlfluff_command: "lint" # Or "lint"
+          #sqlfluff_command: "python warning_as_error_reporter.py {config} {paths}"
           config: "Coffee/.sqlfluff"
           paths: 'Coffee/migrations'
-          fail_on_warnings: true
+          fail_on_error: true
       - name: 'Show outputs (Optional)'
         shell: bash
         run: |
