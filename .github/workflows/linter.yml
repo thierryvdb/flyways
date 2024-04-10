@@ -17,6 +17,7 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           #reporter: github-check
+          reporter: github-pr-review
           sqlfluff_version: "3.0.3"
           sqlfluff_command: "lint"
           config: "Coffee/.sqlfluff"
@@ -24,11 +25,14 @@ jobs:
           level: warning
 
       - name: Generate GITHUB_STEP_SUMMARY
-        run: |
-            warnings=$(echo '${{ steps.lint-sql.outputs.github-pr-review }}' | jq -r '.annotations[].message | select(test("WARNING"))')
-            if [ -n "$warnings" ]; then
-              echo "### :warning: Warnings found during SQL linting"
-              echo "$warnings" | sed 's/^/  - /g'
-            fi
         env:
-            GITHUB_STEP_SUMMARY: ${{ env.GITHUB_STEP_SUMMARY }}
+          GITHUB_STEP_SUMMARY: ${{ env.GITHUB_STEP_SUMMARY }}
+        run: |
+          echo "### :warning: SQL Linting Warnings" >> $GITHUB_STEP_SUMMARY
+  
+          warnings=$(echo '${{ steps.lint-sql.outputs.github-pr-review }}' | jq -r '.annotations[].message')
+          if [ -n "$warnings" ]; then
+            echo "$warnings" | sed 's/^/  - /g' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "  No warnings found." >> $GITHUB_STEP_SUMMARY
+          fi
