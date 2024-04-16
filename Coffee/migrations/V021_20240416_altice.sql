@@ -12,5 +12,6 @@ this int,
 lop int,
 oo int,
 oi int,
-oiidj int
+oiidj int,
+myy int
 );
