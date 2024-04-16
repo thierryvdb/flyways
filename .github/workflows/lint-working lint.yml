@@ -16,7 +16,7 @@ jobs:
       - name: Install SQLFluff
         run: "pip install sqlfluff==3.0.3"
       - name: Lint models
-        run: sqlfluff lint Coffee/migrations --dialect mysql >> file
+        run: sqlfluff lint Coffee/migrations/*.sql --dialect mysql >> file
       - name: read file
         run: |
           cat file | grep "=="
