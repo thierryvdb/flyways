@@ -38,4 +38,4 @@ jobs:
           #fi
           echo '${{ steps.lint-sql.outputs.github-pr-review }}' >> $GITHUB_STEP_SUMMARY
           echo " ======" >> $GITHUB_STEP_SUMMARY
-          echo '${{ steps.lint-sql.outputs }}' >> $GITHUB_STEP_SUMMARY
+          echo '${{ steps.lint-sql.outputs }}' | jq '.' >> $GITHUB_STEP_SUMMARY 

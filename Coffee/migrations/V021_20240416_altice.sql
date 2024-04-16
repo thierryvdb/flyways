@@ -1,5 +1,6 @@
 create table himan(
 id int,
 me  varchar(40),
-idt int
+idt int,
+lp int
 );
