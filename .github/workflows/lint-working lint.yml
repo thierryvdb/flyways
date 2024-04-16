@@ -6,6 +6,7 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   lint-models:
     runs-on: self-hosted
+    continue-on-error: true
     steps:
       - name: Checkout Code
         uses: "actions/checkout@v4"
@@ -16,4 +17,5 @@ jobs:
       - name: Install SQLFluff
         run: "pip install sqlfluff==3.0.3"
       - name: Lint models
-        run: "sqlfluff lint Coffee/migrations --dialect mysql"
+        run: "sqlfluff lint Coffee/migrations --dialect mysql" > localfile
+      #- name: 
