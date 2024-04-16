@@ -17,7 +17,7 @@ jobs:
       - name: Install SQLFluff
         run: "pip install sqlfluff==3.0.3"
       - name: Lint models
-        run: "sqlfluff lint Coffee/migrations --dialect mysql > localfile" 
-      - name: Generate Summary
-        run: |
-          cat localfile | echo "<table>" grep -oE '== \[.*\] FAIL' | sed -E 's/^== \[(.*)\] FAIL$/<tr><td>\1<\/td><td>failed<\/td><\/tr>/' echo "</table>" >> $GITHUB_STEP_SUMMARY
+        run: "sqlfluff lint Coffee/migrations --dialect mysql | grep -oE '== \[.*\] FAIL' | sed -E 's/^== \[(.*)\] FAIL$/<tr><td>\1<\/td><td>failed<\/td><\/tr>/' >> $GITHUB_STEP_SUMMARY" 
+      #- name: Generate Summary
+      #  run: |
+      #    cat localfile | grep -oE '== \[.*\] FAIL' | sed -E 's/^== \[(.*)\] FAIL$/<tr><td>\1<\/td><td>failed<\/td><\/tr>/' >> $GITHUB_STEP_SUMMARY
