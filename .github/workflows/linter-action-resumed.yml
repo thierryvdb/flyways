@@ -27,7 +27,7 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.lint-sql.outputs.sqlfluff-results }}" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "${{ toJson(steps.lint-sql.outputs) }}" >> $GITHUB_STEP_SUMMARY
+          echo "${{ toJson(steps.lint-sql) }}" 
         env:
           GITHUB_STEP_SUMMARY: ${{ github.step_summary }}
 
