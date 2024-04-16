@@ -30,9 +30,10 @@ jobs:
         run: |
           echo "### :warning: SQL Linting Warnings" >> $GITHUB_STEP_SUMMARY
   
-          warnings=$(echo '${{ steps.lint-sql.outputs.github-pr-review }}' | jq -r '.annotations[].message')
-          if [ -n "$warnings" ]; then
-            echo "$warnings" | sed 's/^/  - /g' >> $GITHUB_STEP_SUMMARY
-          else
-            echo "  No warnings found." >> $GITHUB_STEP_SUMMARY
-          fi
+          #warnings=$(echo '${{ steps.lint-sql.outputs.github-pr-review }}' | jq -r '.annotations[].message')
+          #if [ -n "$warnings" ]; then
+          #  echo "$warnings" | sed 's/^/  - /g' >> $GITHUB_STEP_SUMMARY
+          #else
+          #  echo "  No warnings found." >> $GITHUB_STEP_SUMMARY
+          #fi
+          $(echo '${{ steps.lint-sql.outputs.github-pr-review }}') >> $GITHUB_STEP_SUMMARY
