@@ -10,5 +10,6 @@ hh int,
 reviewdog int,
 this int,
 lop int,
-oo int
+oo int,
+oi int
 );
