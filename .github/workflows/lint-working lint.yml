@@ -20,4 +20,4 @@ jobs:
         run: "sqlfluff lint Coffee/migrations --dialect mysql > localfile" 
       - name: Generate Summary
         run: |
-          cat localfile | echo "<table>" grep -oE '== \[.*\] FAIL' | sed -E 's/^== \[(.*)\] FAIL$/<tr><td>\1<\/td><td>failed<\/td><\/tr>/' echo "</table>" 
+          cat localfile | echo "<table>" grep -oE '== \[.*\] FAIL' | sed -E 's/^== \[(.*)\] FAIL$/<tr><td>\1<\/td><td>failed<\/td><\/tr>/' echo "</table>" >> $GITHUB_STEP_SUMMARY
