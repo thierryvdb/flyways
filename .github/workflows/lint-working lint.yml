@@ -17,6 +17,6 @@ jobs:
         run: "pip install sqlfluff==3.0.3"
         id: linter
       - name: Lint models
-        run: "sqlfluff lint Coffee/migrations"
-      - name: Output results for lint
-        run: echo ${{ steps.linter.outputs }} >> GITHUB_STEP_SUMMARY
+        run: sqlfluff lint Coffee/migrations >> GITHUB_STEP_SUMMARY
+      #- name: Output results for lint
+      #  run: echo ${{ steps.linter.outputs }} >> GITHUB_STEP_SUMMARY
