@@ -5,5 +5,6 @@ idt int,
 lp int,
 life int,
 massage int,
-be int
+be int,
+hh int
 );
