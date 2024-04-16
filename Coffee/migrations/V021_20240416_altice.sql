@@ -14,5 +14,6 @@ oo int,
 oi int,
 oiidj int,
 myy int,
-loff int
+loff int,
+ofehi int
 );
