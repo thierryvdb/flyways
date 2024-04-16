@@ -18,4 +18,6 @@ jobs:
         run: "pip install sqlfluff==3.0.3"
       - name: Lint models
         run: "sqlfluff lint Coffee/migrations --dialect mysql > localfile" 
-      #- name: 
+      - name: Generate Summary
+        run: |
+          cat localfile | echo "<table>" grep -oE '== \[.*\] FAIL' | sed -E 's/^== \[(.*)\] FAIL$/<tr><td>\1<\/td><td>failed<\/td><\/tr>/' echo "</table>" 
