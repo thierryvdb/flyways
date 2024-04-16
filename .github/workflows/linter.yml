@@ -25,7 +25,7 @@ jobs:
 
       - name: Generate GITHUB_STEP_SUMMARY
         env:
-          GITHUB_STEP_SUMMARY: ${{ env.GITHUB_STEP_SUMMARY }}
+          GITHUB_STEP_SUMMARY: $GITHUB_STEP_SUMMARY
         run: |
           echo "### :warning: SQL Linting Warnings" >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
