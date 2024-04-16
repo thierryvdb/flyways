@@ -16,6 +16,9 @@ jobs:
       - name: Install SQLFluff
         run: "pip install sqlfluff==3.0.3"
       - name: Lint models
-        run: sqlfluff lint Coffee/migrations --dialect mysql
+        run: sqlfluff lint Coffee/migrations --dialect mysql >> file
+      - name: read file
+        run: |
+          cat file | grep "=="
       #- name: Output results for lint
       #  run: echo ${{ steps.linter.outputs }} >> GITHUB_STEP_SUMMARY

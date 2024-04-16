@@ -16,6 +16,5 @@ oiidj int,
 myy int,
 loff int,
 ofehi int,
-new int,
-lelres int
+new int
 );
