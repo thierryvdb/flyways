@@ -1,3 +1,4 @@
 create table ironys1(
-id int 
+id int ,
+hi bud
 );
