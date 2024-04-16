@@ -17,5 +17,6 @@ myy int,
 loff int,
 ofehi int,
 new int,
-lelres int
+lelres int,
+lotttsss int
 );
