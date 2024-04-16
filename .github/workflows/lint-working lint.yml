@@ -17,5 +17,5 @@ jobs:
       - name: Install SQLFluff
         run: "pip install sqlfluff==3.0.3"
       - name: Lint models
-        run: "sqlfluff lint Coffee/migrations --dialect mysql" > localfile
+        run: "sqlfluff lint Coffee/migrations --dialect mysql > localfile" 
       #- name: 
