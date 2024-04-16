@@ -1,3 +1,4 @@
 create table himan(
-id int
+id int,
+me  varchar(40)
 );
