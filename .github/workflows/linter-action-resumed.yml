@@ -13,19 +13,20 @@ jobs:
         id: lint-sql
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-review
+          reporter: github-check
           sqlfluff_version: "2.0.7"
           sqlfluff_command: "lint"
           config: "Coffee/.sqlfluff"
           paths: 'Coffee/migrations'
           level: warning
+          dialect: mysql
       - name: Generate GITHUB_STEP_SUMMARY
         run: |
           echo "### :warning: SQL Linting Warnings" >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           echo " ======" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.lint-sql.outputs.sqlfluff-results }}" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.sqlfluff-with-reviewdog-in-composite.outputs.sqlfluff-results }}" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo "${{ toJson(steps) }}" 
         env:
