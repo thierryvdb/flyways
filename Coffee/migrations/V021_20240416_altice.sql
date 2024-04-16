@@ -9,5 +9,6 @@ be int,
 hh int,
 reviewdog int,
 this int,
-lop int
+lop int,
+oo int
 );
