@@ -11,5 +11,6 @@ reviewdog int,
 this int,
 lop int,
 oo int,
-oi int
+oi int,
+oiidj int
 );
