@@ -5,5 +5,6 @@ CREATE TABLE astronauts (
     birth_date DATE,
     nationality VARCHAR(50),
     spaceflights INT,
-    mission_specialty VARCHAR(100)
+    mission_specialty VARCHAR(100),
+    blogman int
 );
