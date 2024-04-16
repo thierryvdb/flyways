@@ -1,33 +1,31 @@
 name: sqlfluff with reviewdog
 
 on:
-  pull_request
+  pull_request:
 
 jobs:
-
   lint-check:
     name: sqlfluff (github-check)
     runs-on: self-hosted
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: yu-iskw/action-sqlfluff@v3
         id: lint-sql
         with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
           sqlfluff_version: "3.0.3"
           sqlfluff_command: "lint"
           config: "Coffee/.sqlfluff"
           paths: 'Coffee/migrations'
           level: warning
-
       - name: Generate GITHUB_STEP_SUMMARY
-        env:
-          GITHUB_STEP_SUMMARY: $GITHUB_STEP_SUMMARY
         run: |
           echo "### :warning: SQL Linting Warnings" >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           echo " ======" >> $GITHUB_STEP_SUMMARY
-          echo 'Object' | jq '.' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.lint-sql.outputs.result }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+        env:
+          GITHUB_STEP_SUMMARY: ${{ github.step_summary }}

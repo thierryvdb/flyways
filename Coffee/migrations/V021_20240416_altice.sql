@@ -4,5 +4,6 @@ me  varchar(40),
 idt int,
 lp int,
 life int,
-massage int
+massage int,
+be int
 );
