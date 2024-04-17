@@ -9,5 +9,6 @@ CREATE TABLE astronauts (
     blogman varchar(50),
     helpme varchar(4),
     valor int,
-    outro int
+    outro int,
+    jeep int
 );
