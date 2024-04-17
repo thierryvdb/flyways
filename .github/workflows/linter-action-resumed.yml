@@ -5,7 +5,7 @@ on:
 
 jobs:
   lint-check:
-    name: SQLFluff
+    name: SQLFluff - LINT
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
