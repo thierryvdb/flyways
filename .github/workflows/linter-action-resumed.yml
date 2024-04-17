@@ -31,3 +31,7 @@ jobs:
           echo "${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}" 
         env:
           GITHUB_STEP_SUMMARY: ${{ github.step_summary }}
+      - name: Generate Report
+        run: |
+          echo ":warning: " >> $GITHUB_STEP_SUMMARY
+          jq -r '.[] | .filepath as $filepath | .violations[] | "<tr><td>\($filepath)</td><td>\(.line_no)</td><td>\(.line_pos)</td><td>\(.description)</td></tr>"' sqlfluff-lint.json | \ awk 'BEGIN {print "<table>"} {print} END {print "</table>"}' >> $GITHUB_STEP_SUMMARY
