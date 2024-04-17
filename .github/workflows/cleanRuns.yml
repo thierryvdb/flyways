@@ -3,6 +3,7 @@ name: Delete Old Workflow Runs
 on:
   schedule:
     - cron: '0 0 * * *' #Cleans at midnight all executed workflow runs
+  workflow_dispatch:
 
 jobs:
   del_runs:
