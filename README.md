@@ -1,4 +1,4 @@
-# :rocket: Flyway Action => Including SQL-lint and migrations
+# :rocket: Flyway Action
 
 Todas as operações por recomendação deverão ser executas a partir do usuário que executar o **github-runner**.
 
