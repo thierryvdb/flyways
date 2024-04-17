@@ -7,7 +7,7 @@ jobs:
   install:
     runs-on: self-hosted
     steps:
-      - name: Install sql-lint
+      - name: Install sql-lint t
         run: sudo npm i -g sql-lint
       - name: Check lint
         run: sql-lint Coffee/migrations
