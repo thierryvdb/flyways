@@ -2,8 +2,7 @@ name: SQL-LINT
 
 on:
   pull_request:
-    branches:
-      '!main'
+
 
 jobs:
   lint-check:
