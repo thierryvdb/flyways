@@ -12,5 +12,6 @@ CREATE TABLE astronauts (
     outro int,
     jeep int,
     moto int,
-    gol int
+    gol int,
+    azul int
 );
