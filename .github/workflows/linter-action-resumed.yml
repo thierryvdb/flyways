@@ -15,8 +15,8 @@ jobs:
           reporter: github-check
           sqlfluff_version: "3.0.3"
           sqlfluff_command: "lint"
-          config: "Coffee/.sqlfluff"
-          paths: 'Coffee/migrations'
+          config: '${{ github.workspace }}/.sqlfluff'
+          paths: '${{ github.workspace }}/migrations'
           level: warning
           dialect: mysql
       - name: Generate Report
