@@ -1,0 +1,33 @@
+name: SQL-LINT
+
+on:
+  pull_request:
+
+
+jobs:
+  lint-check:
+    name: SQLFluff - LINT
+    runs-on: self-hosted
+    steps:
+      - name: Check workspace
+        run: echo '${{ github.workspace }}'
+      - name: Checkout this wonderfull project
+        uses: actions/checkout@v4
+      - name: Let's get sqlfluff in action 
+        uses: yu-iskw/action-sqlfluff@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          sqlfluff_version: "3.0.3"
+          sqlfluff_command: "lint"
+          config: 'Coffee/.sqlfluff'
+          paths: 'Coffee/migrations'
+          level: warning
+          dialect: mysql
+      - name: Generate Report
+        run: |
+          echo ":warning: A action finalizou, porém, encontrei correções necessárias nos arquivos abaixo:" >> $GITHUB_STEP_SUMMARY
+          # Abaixo versão 2.0.7
+          #jq -r '.[] | .filepath as $filepath | .violations[] | "\($filepath) \(.line_no) \(.line_pos) \(.description)"' sqlfluff-lint.json | awk 'BEGIN {print "<table><tr><td>Arquivo</td><td>Número da Linha</td><td>Posição</td><td>Descrição</td></tr>"} {printf "<tr><td>%s</td><td>%s</td><td>%s</td><td>", $1, $2, $3; for (i=4; i<=NF; i++) printf "%s ", $i; print "</td></tr>"} END {print "</table>"}' >> $GITHUB_STEP_SUMMARY
+          # abaixo versão 3.0.3
+          jq -r '.[] | .filepath as $filepath | .violations[] | "\($filepath) \(.start_line_no) \(.start_line_pos) \(.description)"' sqlfluff-lint.json | awk 'BEGIN {print "<table><tr><td>:gift: <b>Arquivo</td><td>:hammer: <b>Número da Linha</td><td>:bomb: <b>Posição</td><td>:page_facing_up: <b>Descrição</td></tr>"} {printf "<tr><td>%s</td><td>%s</td><td>%s</td><td>", $1, $2, $3; for (i=4; i<=NF; i++) printf "%s ", $i; print "</td></tr>"} END {print "</table>"}' >> $GITHUB_STEP_SUMMARY
