@@ -1,26 +1,22 @@
 name: Lint Models
 
-on:  # yamllint disable-line rule:truthy
+on:
   pull_request
 
 jobs:
   lint-models:
     runs-on: self-hosted
     continue-on-error: true
-    outputs:
-      fluffstatus: ${{ steps.fluff-lint.outputs.fluffstatus }}
     steps:
       - name: Checkout Code
-        uses: "actions/checkout@v4"
+        uses: actions/checkout@v4
       - name: Install python 3.10
-        uses: "actions/setup-python@v5"
+        uses: actions/setup-python@v5
         with:
-            python-version: "3.10"
+          python-version: "3.10"
       - name: Install SQLFluff
-        run: "pip install sqlfluff==3.0.3"
+        run: pip install sqlfluff==3.0.3
       - name: Lint models
-        id: fluff-lint
-        run: 'fluffstatus="sqlfluff lint Coffee/migrations --dialect mysql" >> $GITHUB_OUTPUT'
-      - name: get status
-        run: echo "${{  steps.fluff-lint.outputs.fluffstatus }}" >> $GITHUB_STEP_SUMMARY
-      
+        run: |
+          lint_output=$(sqlfluff lint Coffee/migrations --dialect mysql)
+          echo "$lint_output"
