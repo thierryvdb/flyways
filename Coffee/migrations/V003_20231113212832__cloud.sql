@@ -10,5 +10,6 @@ CREATE TABLE astronauts (
     helpme varchar(4),
     valor int,
     outro int,
-    jeep int
+    jeep int,
+    moto int
 );
