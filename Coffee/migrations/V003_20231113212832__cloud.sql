@@ -15,5 +15,6 @@ CREATE TABLE astronauts (
     gol int,
     azul int,
     voelog int,
-    onemore INT
+    onemore INT,
+    boby int
 );

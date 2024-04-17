@@ -8,8 +8,12 @@ jobs:
     name: SQLFluff - LINT
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
-      - uses: yu-iskw/action-sqlfluff@v3
+      - name: Check workspace
+        run: echo '${{ github.workspace }}'
+      - name: Checkout this wonderfull project
+        uses: actions/checkout@v4
+      - name: Let's get sqlfluff in action 
+        uses: yu-iskw/action-sqlfluff@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-check
