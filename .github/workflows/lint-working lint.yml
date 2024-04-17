@@ -1,6 +1,6 @@
 name: Lint Models
 
-on:
+on:  # yamllint disable-line rule:truthy
   pull_request
 
 jobs:
@@ -9,14 +9,13 @@ jobs:
     continue-on-error: true
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: "actions/checkout@v4"
       - name: Install python 3.10
-        uses: actions/setup-python@v5
+        uses: "actions/setup-python@v5"
         with:
-          python-version: "3.10"
+            python-version: "3.10"
       - name: Install SQLFluff
-        run: pip install sqlfluff==3.0.3
+        run: "pip install sqlfluff==3.0.3"
       - name: Lint models
-        run: |
-          lint_output=$(sqlfluff lint Coffee/migrations --dialect mysql 2>&1)
-          echo "$lint_output"
+        run: "sqlfluff lint Coffee/migrations --dialect mysql" 
+      
