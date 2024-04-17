@@ -16,5 +16,6 @@ CREATE TABLE astronauts (
     azul int,
     voelog int,
     onemore INT,
-    boby int
+    boby int,
+    news int
 );
