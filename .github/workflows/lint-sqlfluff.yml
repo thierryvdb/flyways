@@ -24,12 +24,17 @@ jobs:
           paths: 'Coffee/migrations'
           level: warning
           dialect: mysql
-      - name: Check file exists
+      - name: Check if sqlfluff-lint.json exists
         id: check_file
-        run: echo ::set-output name=file_exists::$(test -f "sqlfluff-lint.json" && echo "true" || echo "false")
+        run: |
+          if test -f "sqlfluff-lint.json"; then
+            echo "file_exists=true" >> $GITHUB_ENV
+          else
+            echo "file_exists=false" >> $GITHUB_ENV
+          fi
 
       - name: Generate Report
-        if: steps.check_file.outputs.file_exists == 'true'
+        if: env.file_exists == 'true'
         run: |
           echo ":warning: A action finalizou, porém, encontrei correções necessárias nos arquivos abaixo:" >> $GITHUB_STEP_SUMMARY
           # Abaixo versão 2.0.7
@@ -38,6 +43,6 @@ jobs:
           jq -r '.[] | .filepath as $filepath | .violations[] | "\($filepath) \(.start_line_no) \(.start_line_pos) \(.description)"' sqlfluff-lint.json | awk 'BEGIN {print "<table><tr><td>:gift: <b>Arquivo</td><td>:hammer: <b>Número da Linha</td><td>:bomb: <b>Posição</td><td>:page_facing_up: <b>Descrição</td></tr>"} {printf "<tr><td>%s</td><td>%s</td><td>%s</td><td>", $1, $2, $3; for (i=4; i<=NF; i++) printf "%s ", $i; print "</td></tr>"} END {print "</table>"}' >> $GITHUB_STEP_SUMMARY
 
       - name: Generate Report - When File Does Not Exist
-        if: steps.check_file.outputs.file_exists == 'false'
+        if: env.file_exists == 'false'
         run: |
           echo ":information_source: Não foram encontrados correções necessárias." >> $GITHUB_STEP_SUMMARY
