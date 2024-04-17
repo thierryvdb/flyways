@@ -2,7 +2,6 @@ name: SQL-LINT
 
 on:
   pull_request:
-    types: [opened]
     branches:
       - '*'
       - '!main'
