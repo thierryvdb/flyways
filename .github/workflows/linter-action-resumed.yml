@@ -1,16 +1,15 @@
-name: sqlfluff with reviewdog
+name: SQL-LINT
 
 on:
   pull_request:
 
 jobs:
   lint-check:
-    name: sqlfluff (github-check)
+    name: SQLFluff
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
       - uses: yu-iskw/action-sqlfluff@v3
-        id: lint-sql
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-check
