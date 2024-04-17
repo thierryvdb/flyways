@@ -20,19 +20,10 @@ jobs:
           paths: 'Coffee/migrations'
           level: warning
           dialect: mysql
-      - name: Generate GITHUB_STEP_SUMMARY
-        run: |
-          echo "### :warning: SQL Linting Warnings" >> $GITHUB_STEP_SUMMARY
-          echo '' >> $GITHUB_STEP_SUMMARY
-          echo " ======" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.sqlfluff-with-reviewdog-in-composite.outputs.sqlfluff-results }}" >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.lint-sql.outputs.sqlfluff-results-rdjson }}" 
-        env:
-          GITHUB_STEP_SUMMARY: ${{ github.step_summary }}
       - name: Generate Report
         run: |
-          echo ":warning: " >> $GITHUB_STEP_SUMMARY
-          jq -r '.[] | .filepath as $filepath | .violations[] | "<tr><td>\($filepath)</td><td>\(.line_no)</td><td>\(.line_pos)</td><td>\(.description)</td></tr>"' sqlfluff-lint.json |  awk 'BEGIN {print "<table>"} {print} END {print "</table>"}' >> $GITHUB_STEP_SUMMARY
+          echo ":warning: A action finalizou, porem, encontrei correções necessárias nos arquivos abaixo:" >> $GITHUB_STEP_SUMMARY
+          jq -r '.[] | .filepath as $filepath | .violations[] | "\($filepath) \(.line_no) \(.line_pos) \(.description)"' sqlfluff-lint.json | awk 'BEGIN {print "<table><tr><td>Arquivo</td><td>Número da Linha</td><td>Posição</td><td>Descrição</td></tr>"} {print "<tr><td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4 "</td></tr>"} END {print "</table>"}'
+
+          #jq -r '.[] | .filepath as $filepath | .violations[] | "<tr><td>\($filepath)</td><td>\(.line_no)</td><td>\(.line_pos)</td><td>\(.description)</td></tr>"' sqlfluff-lint.json |  awk 'BEGIN {print "<table>"} {print} END {print "</table>"}' >> $GITHUB_STEP_SUMMARY
           #jq -r '.[] | .filepath as $filepath | .violations[] | "<tr><td>\($filepath)</td><td>\(.line_no)</td><td>\(.line_pos)</td><td>\(.description)</td></tr>"' sqlfluff-lint.json |  (echo "<table>"; cat -; echo "</table>")
