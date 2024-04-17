@@ -14,5 +14,6 @@ CREATE TABLE astronauts (
     moto int,
     gol int,
     azul int,
-    voelog int
+    voelog int,
+    onemore INT
 );
