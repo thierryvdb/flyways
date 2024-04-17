@@ -1,6 +1,7 @@
 # :rocket: Flyway Action => Including SQL-lint and migrations
 
-Todas as operações por recomendação deverão ser executas a partir do usuário que executar o **github-runner**, que por sua vez deverá ter permissões :warning: para realizar o **sudo** sem senha.
+Todas as operações por recomendação deverão ser executas a partir do usuário que executar o **github-runner**.
+O usuário do github-runner deverá ter :warning: **permissões** :warning: para realizar o **sudo** sem senha.
 
 Passo 1:
 
