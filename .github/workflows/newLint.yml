@@ -10,5 +10,5 @@ jobs:
       - name: Install sql-lint t
         run: sudo npm i -g sql-lint
       - name: Check lint
-        run: sql-lint .
+        run: sql-lint ../Coffee/migrations
            
