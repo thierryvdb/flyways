@@ -20,7 +20,7 @@ jobs:
         run: "pip install sqlfluff==3.0.3"
       - name: Lint models
         id: fluff-lint
-        run: fluffstatus="sqlfluff lint Coffee/migrations --dialect mysql" >> $GITHUB_OUTPUT
+        run: 'fluffstatus="sqlfluff lint Coffee/migrations --dialect mysql" >> $GITHUB_OUTPUT'
       - name: get status
         run: echo "${{  steps.fluff-lint.outputs.fluffstatus }}" >> $GITHUB_STEP_SUMMARY
       
