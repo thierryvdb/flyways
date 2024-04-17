@@ -23,7 +23,8 @@ jobs:
       - name: Generate Report
         run: |
           echo ":warning: A action finalizou, porem, encontrei correções necessárias nos arquivos abaixo:" >> $GITHUB_STEP_SUMMARY
-          jq -r '.[] | .filepath as $filepath | .violations[] | "\($filepath) \(.line_no) \(.line_pos) \(.description)"' sqlfluff-lint.json | awk 'BEGIN {print "<table><tr><td>Arquivo</td><td>Número da Linha</td><td>Posição</td><td>Descrição</td></tr>"} {print "<tr><td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4$5 "</td></tr>"} END {print "</table>"}' >> $GITHUB_STEP_SUMMARY
-
+          #jq -r '.[] | .filepath as $filepath | .violations[] | "\($filepath) \(.line_no) \(.line_pos) \(.description)"' sqlfluff-lint.json | awk 'BEGIN {print "<table><tr><td>Arquivo</td><td>Número da Linha</td><td>Posição</td><td>Descrição</td></tr>"} {print "<tr><td>" $1 "</td><td>" $2 "</td><td>" $3 "</td><td>" $4$5 "</td></tr>"} END {print "</table>"}' >> $GITHUB_STEP_SUMMARY
+          jq -r '.[] | .filepath as $filepath | .violations[] | "\($filepath) \(.line_no) \(.line_pos) \(.description)"' sqlfluff-lint.json | awk 'BEGIN {print "<table><tr><td>Arquivo</td><td>Número da Linha</td><td>Posição</td><td>Descrição</td></tr>"} {printf "<tr><td>%s</td><td>%s</td><td>%s</td><td>", $1, $2, $3; for (i=4; i<=NF; i++) printf "%s ", $i; print "</td></tr>"} END {print "</table>"}' >> $GITHUB_STEP_SUMMARY
+          
           #jq -r '.[] | .filepath as $filepath | .violations[] | "<tr><td>\($filepath)</td><td>\(.line_no)</td><td>\(.line_pos)</td><td>\(.description)</td></tr>"' sqlfluff-lint.json |  awk 'BEGIN {print "<table>"} {print} END {print "</table>"}' >> $GITHUB_STEP_SUMMARY
           #jq -r '.[] | .filepath as $filepath | .violations[] | "<tr><td>\($filepath)</td><td>\(.line_no)</td><td>\(.line_pos)</td><td>\(.description)</td></tr>"' sqlfluff-lint.json |  (echo "<table>"; cat -; echo "</table>")
