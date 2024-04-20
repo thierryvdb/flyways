@@ -1,5 +1,0 @@
-CREATE TABLE RandomTable (
-    ID INT AUTO_INCREMENT PRIMARY KEY,
-    Name VARCHAR(100),
-    Value INT
-);
