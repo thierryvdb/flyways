@@ -1,7 +1,6 @@
 databaseType = "MySql"
 name = "Coffee"
 id = "3f2fbad1-d01e-44ae-a5ed-122539902868"
-flyway.defaultSchema=public
 
 [flywayDesktop]
 developmentEnvironment = "development"
@@ -34,7 +33,7 @@ url = "jdbc:mysql://192.168.1.21:3306"
 schemas = [ "coffeeshop_dev" ]
 displayName = "Development"
 
-[environments.mcdonalds]
+[environments.prod]
 url = "jdbc:mysql://192.168.1.36:3306"
 schemas = [ "mcdonalds" ]
 displayName = "Production"
