@@ -1,0 +1,38 @@
+name: Flyway Migrations
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  FLYWAY_LICENSE_KEY: ${{ secrets.FLYWAY_LICENSE_KEY }}
+  FIRST_UNDO_SCRIPT: ${{ secrets.FIRST_UNDO_SCRIPT }}
+  ACTIONS_RUNNER_DEBUG: true
+
+jobs:
+  prod:
+    name: Deploy Production - Migration
+    runs-on: self-hosted
+    environment: "prod" 
+    if: ${{ true }} #Set this variable to false to temporarily disable the job
+    env:
+      stage: "Prod"
+      databaseName: ${{ secrets.databaseName}}
+      JDBC: ${{ secrets.JDBC }}
+      userName: ${{ secrets.userName }}
+      password: ${{ secrets.password }}
+      pauseForCodeReview: true
+
+    steps:
+      - name: Create Flyway Command Variable
+        if: ${{ true }}
+        run: |
+          echo "FLYWAY_COMMAND='sudo /usr/local/bin/flyway -user=${{ env.userName }} -password=${{ env.password }}  -configFiles=${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml -locations=filesystem:${{ GITHUB.WORKSPACE }}/Coffee/migrations -baselineOnMigrate=true'" >> $GITHUB_ENV
+        continue-on-error: true
+
+      # Runs the Flyway Migrate against the Production database
+      - name: Migrate Build DB
+        if: ${{ true }}
+        run: |
+          eval sudo /usr/local/bin/flyway -user="${{ env.userName }}" -password="${{ env.password }}" -baselineOnMigrate="true" -configFiles="${{ GITHUB.WORKSPACE }}/Coffee/flyway.toml" -locations="filesystem:${{ GITHUB.WORKSPACE }}/*/migrations" info migrate info -url="${{ env.JDBC }}" -cleanDisabled='false'
