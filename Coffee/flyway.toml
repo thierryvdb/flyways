@@ -35,7 +35,7 @@ displayName = "Development"
 
 [environments.prod]
 url = "jdbc:mysql://192.168.1.36:3306"
-schemas = [ "mcdonalds" ]
+schemas = [ "public" ]
 displayName = "Production"
 
 [environments.build]
