@@ -1,7 +1,6 @@
 databaseType = "MySql"
 name = "Coffee"
 id = "3f2fbad1-d01e-44ae-a5ed-122539902868"
-flyway.defaultSchema=public
 
 [flywayDesktop]
 developmentEnvironment = "development"
