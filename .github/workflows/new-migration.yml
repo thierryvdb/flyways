@@ -22,6 +22,7 @@ jobs:
       JDBC: ${{ secrets.JDBC }}
       userName: ${{ secrets.userName }}
       password: ${{ secrets.password }}
+      schemas: ${{ secrets.SCHEMAS }}
       pauseForCodeReview: true
 
     steps:
