@@ -8,15 +8,24 @@ jobs:
   lint-check:
     name: SQLFluff - LINT
     runs-on: self-hosted
+    environment: prod
     steps:
       - name: Check workspace
         run: echo '${{ github.workspace }}'
+      - name: Get Token
+        id: get_workflow_token
+        uses: peter-murray/workflow-application-token-action@v3
+        with:
+          application_id: ${{ secrets.GH_APP_FW_ID }}
+          application_private_key: ${{ secrets.GH_APP_FW_KEY }}
       - name: Checkout this wonderfull project
         uses: actions/checkout@v4
+        with:
+          token: ${{ steps.get_workflow_token.outputs.token }}
       - name: Let's get sqlfluff in action 
         uses: yu-iskw/action-sqlfluff@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ steps.get_workflow_token.outputs.token }}
           reporter: github-pr-review
           sqlfluff_version: "3.0.3"
           sqlfluff_command: "lint"
